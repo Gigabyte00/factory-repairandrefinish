@@ -58,6 +58,9 @@ export const metadata: Metadata = {
       "Expert DIY guides for home repair and improvement. Step-by-step instructions, tool recommendations, and cost estimates for every skill level.",
     images: ["/og-default.jpg"],
   },
+  verification: {
+    google: "BBrotdlUGC9yTTlhkqulpfNz74rTlBmO0sTNvPX6nS8",
+  },
   robots: {
     index: true,
     follow: true,
