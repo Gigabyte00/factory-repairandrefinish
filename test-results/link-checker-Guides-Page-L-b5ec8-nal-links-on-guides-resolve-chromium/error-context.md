@@ -1,0 +1,597 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Repair & Refinish FIX IT RIGHT THE FIRST TIME" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e7]
+        - generic [ref=e9]:
+          - generic [ref=e10]: Repair & Refinish
+          - generic [ref=e11]: FIX IT RIGHT THE FIRST TIME
+      - navigation [ref=e12]:
+        - link "Guides" [ref=e13] [cursor=pointer]:
+          - /url: /guides
+        - button "Categories" [ref=e15] [cursor=pointer]:
+          - text: Categories
+          - img [ref=e16]
+        - link "Tools & Products" [ref=e18] [cursor=pointer]:
+          - /url: /tools-products
+        - link "About" [ref=e19] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e20]:
+        - generic [ref=e23]:
+          - img [ref=e24]
+          - textbox "Search guides..." [ref=e27]
+          - generic [ref=e28]:
+            - generic:
+              - img
+              - text: K
+        - link "Get Free Guide" [ref=e29] [cursor=pointer]:
+          - /url: /free-guide
+  - main [ref=e30]:
+    - navigation "Breadcrumb" [ref=e32]:
+      - list [ref=e33]:
+        - listitem [ref=e34]:
+          - link "Home" [ref=e35] [cursor=pointer]:
+            - /url: /
+            - img [ref=e36]
+            - generic [ref=e39]: Home
+        - listitem [ref=e40]:
+          - img [ref=e41]
+          - link "Guides" [ref=e43] [cursor=pointer]:
+            - /url: /guides
+        - listitem [ref=e44]:
+          - img [ref=e45]
+          - link "Plumbing" [ref=e47] [cursor=pointer]:
+            - /url: /categories/plumbing
+        - listitem [ref=e48]:
+          - img [ref=e49]
+          - generic [ref=e51]: How to Unclog a Kitchen Sink
+    - article [ref=e52]:
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - link "Plumbing" [ref=e57] [cursor=pointer]:
+                - /url: /categories/plumbing
+                - generic [ref=e58]: Plumbing
+              - generic [ref=e59]: Beginner Friendly
+            - heading "How to Unclog a Kitchen Sink" [level=1] [ref=e60]
+            - paragraph [ref=e61]: A clogged kitchen sink is one of the most common household headaches. Learn how to clear it quickly using a plunger, drain snake, or simple baking soda and vinegar — no harsh chemicals needed.
+            - generic [ref=e62]:
+              - generic [ref=e63]:
+                - img [ref=e64]
+                - text: 15-30 minutes
+              - generic [ref=e67]:
+                - img [ref=e68]
+                - text: $0 - $30
+              - generic [ref=e70]:
+                - img [ref=e71]
+                - text: 1 min read
+            - generic [ref=e73]:
+              - img [ref=e75]
+              - generic [ref=e78]:
+                - paragraph [ref=e79]: Repair & Refinish Team
+                - paragraph [ref=e80]: Published February 10, 2026 · Updated March 18, 2026
+            - generic [ref=e81]:
+              - button "Print" [ref=e82] [cursor=pointer]:
+                - img
+                - text: Print
+              - button "Share" [ref=e83] [cursor=pointer]:
+                - img
+                - text: Share
+          - img [ref=e85]
+          - navigation [ref=e87]:
+            - heading "In This Guide" [level=2] [ref=e88]
+            - list [ref=e89]:
+              - listitem [ref=e90]:
+                - link "1 What You'll Need" [ref=e91] [cursor=pointer]:
+                  - /url: "#tools-materials"
+                  - generic [ref=e92]: "1"
+                  - text: What You'll Need
+              - listitem [ref=e93]:
+                - link "2 Check the Garbage Disposal" [ref=e94] [cursor=pointer]:
+                  - /url: "#step-1"
+                  - generic [ref=e95]: "2"
+                  - text: Check the Garbage Disposal
+              - listitem [ref=e96]:
+                - link "3 Try Boiling Water First" [ref=e97] [cursor=pointer]:
+                  - /url: "#step-2"
+                  - generic [ref=e98]: "3"
+                  - text: Try Boiling Water First
+              - listitem [ref=e99]:
+                - link "4 Use the Baking Soda and Vinegar Method" [ref=e100] [cursor=pointer]:
+                  - /url: "#step-3"
+                  - generic [ref=e101]: "4"
+                  - text: Use the Baking Soda and Vinegar Method
+              - listitem [ref=e102]:
+                - link "5 Plunge the Drain" [ref=e103] [cursor=pointer]:
+                  - /url: "#step-4"
+                  - generic [ref=e104]: "5"
+                  - text: Plunge the Drain
+              - listitem [ref=e105]:
+                - link "6 Snake the Drain" [ref=e106] [cursor=pointer]:
+                  - /url: "#step-5"
+                  - generic [ref=e107]: "6"
+                  - text: Snake the Drain
+              - listitem [ref=e108]:
+                - link "7 Clean the P-Trap (If Needed)" [ref=e109] [cursor=pointer]:
+                  - /url: "#step-6"
+                  - generic [ref=e110]: "7"
+                  - text: Clean the P-Trap (If Needed)
+              - listitem [ref=e111]:
+                - link "8 Test and Prevent Future Clogs" [ref=e112] [cursor=pointer]:
+                  - /url: "#step-7"
+                  - generic [ref=e113]: "8"
+                  - text: Test and Prevent Future Clogs
+              - listitem [ref=e114]:
+                - link "9 Tips & Warnings" [ref=e115] [cursor=pointer]:
+                  - /url: "#tips-warnings"
+                  - generic [ref=e116]: "9"
+                  - text: Tips & Warnings
+              - listitem [ref=e117]:
+                - link "10 FAQ" [ref=e118] [cursor=pointer]:
+                  - /url: "#faq"
+                  - generic [ref=e119]: "10"
+                  - text: FAQ
+          - generic [ref=e120]:
+            - heading "What You'll Need" [level=2] [ref=e121]
+            - generic [ref=e122]:
+              - generic [ref=e123]:
+                - generic [ref=e125]:
+                  - img [ref=e126]
+                  - generic [ref=e128]: Tools
+                - list [ref=e130]:
+                  - listitem [ref=e131]: Flat-bottom sink plunger
+                  - listitem [ref=e132]: Drain snake (25-foot)
+                  - listitem [ref=e133]: Tongue-and-groove pliers
+                  - listitem [ref=e134]: Bucket
+                  - listitem [ref=e135]: Rubber gloves
+                  - listitem [ref=e136]: Flashlight
+              - generic [ref=e137]:
+                - generic [ref=e139]:
+                  - img [ref=e140]
+                  - generic [ref=e144]: Materials
+                - list [ref=e146]:
+                  - listitem [ref=e147]: Baking soda (1/2 cup)
+                  - listitem [ref=e148]: White vinegar (1/2 cup)
+                  - listitem [ref=e149]: Dish soap
+                  - listitem [ref=e150]: Old towels
+          - generic [ref=e152]:
+            - heading "Cost Estimate" [level=3] [ref=e153]:
+              - img [ref=e154]
+              - text: Cost Estimate
+            - generic [ref=e156]:
+              - generic [ref=e157]:
+                - paragraph [ref=e158]: Budget
+                - paragraph [ref=e159]: $0
+              - generic [ref=e160]:
+                - paragraph [ref=e161]: Mid-Range
+                - paragraph [ref=e162]: $15
+              - generic [ref=e163]:
+                - paragraph [ref=e164]: Premium
+                - paragraph [ref=e165]: $30
+            - generic [ref=e166]:
+              - img [ref=e167]
+              - paragraph [ref=e169]: A plumber charges $150-$250 for a simple drain clearing. DIY cost is $0-$30 using tools you likely already own.
+          - generic [ref=e170]:
+            - heading "Step-by-Step Instructions" [level=2] [ref=e171]
+            - generic [ref=e172]:
+              - generic [ref=e173]:
+                - text: "1"
+                - generic [ref=e174]:
+                  - generic [ref=e175]:
+                    - heading "Check the Garbage Disposal" [level=3] [ref=e176]
+                    - generic [ref=e177]: Step 1 of 7
+                  - progressbar [ref=e178]
+                - paragraph [ref=e180]: If your sink has a garbage disposal, turn it on and run hot water. If the disposal hums but doesn't spin, it's jammed — turn it off and insert the hex wrench (usually 1/4 inch) into the bottom of the disposal unit and turn it back and forth to free the flywheel. If the disposal works fine but water still won't drain, the clog is further down the pipe.
+                - generic [ref=e182]: Underneath a kitchen sink, hand inserting hex wrench into bo...
+                - generic [ref=e183]:
+                  - text: Pro Tip
+                  - paragraph [ref=e184]: Most disposals come with a hex key, but if you lost yours, a standard 1/4-inch Allen wrench from any hardware store works perfectly.
+              - generic [ref=e185]:
+                - text: "2"
+                - generic [ref=e186]:
+                  - generic [ref=e187]:
+                    - heading "Try Boiling Water First" [level=3] [ref=e188]
+                    - generic [ref=e189]: Step 2 of 7
+                  - progressbar [ref=e190]
+                - paragraph [ref=e192]: Boil a full kettle of water and pour it directly down the drain in two or three stages, waiting a few seconds between pours. Boiling water can melt and flush grease buildup that's narrowing the pipe. This works surprisingly often for slow drains caused by grease accumulation. If the water drains freely after this, you're done.
+                - generic [ref=e194]: Pouring boiling water from a kettle directly into a stainles...
+                - generic [ref=e195]:
+                  - text: Warning
+                  - paragraph [ref=e196]: Do not pour boiling water if you have PVC drain pipes (white plastic). Boiling water can soften PVC joints. Use very hot tap water instead.
+              - generic [ref=e197]:
+                - text: "3"
+                - generic [ref=e198]:
+                  - generic [ref=e199]:
+                    - heading "Use the Baking Soda and Vinegar Method" [level=3] [ref=e200]
+                    - generic [ref=e201]: Step 3 of 7
+                  - progressbar [ref=e202]
+                - paragraph [ref=e204]: Pour 1/2 cup of baking soda down the drain, followed by 1/2 cup of white vinegar. The mixture will fizz and bubble — that reaction helps break up organic clogs. Cover the drain opening with a wet cloth to keep the pressure directed downward. Wait 15-30 minutes, then flush with hot water. Repeat once if the drain is still slow.
+                - generic [ref=e206]: Baking soda being poured into a kitchen sink drain, then vin...
+                - generic [ref=e207]:
+                  - text: Pro Tip
+                  - paragraph [ref=e208]: For extra grease-cutting power, squirt a tablespoon of dish soap down the drain before the baking soda. The soap helps emulsify grease.
+              - generic [ref=e209]:
+                - text: "4"
+                - generic [ref=e210]:
+                  - generic [ref=e211]:
+                    - heading "Plunge the Drain" [level=3] [ref=e212]
+                    - generic [ref=e213]: Step 4 of 7
+                  - progressbar [ref=e214]
+                - paragraph [ref=e216]: If the clog persists, fill the sink with 3-4 inches of water. Place a flat-bottom sink plunger (not a flange toilet plunger) over the drain opening, ensuring a complete seal. If you have a double sink, stuff a wet rag into the other drain to prevent air from escaping. Plunge vigorously 15-20 times with sharp, forceful strokes, then pull the plunger away quickly to break the suction.
+                - generic [ref=e218]: Person using a flat-bottom plunger on a kitchen sink drain, ...
+                - generic [ref=e219]:
+                  - text: Pro Tip
+                  - paragraph [ref=e220]: Coat the rim of the plunger cup with petroleum jelly for a better seal against the sink surface.
+              - generic [ref=e221]:
+                - text: "5"
+                - generic [ref=e222]:
+                  - generic [ref=e223]:
+                    - heading "Snake the Drain" [level=3] [ref=e224]
+                    - generic [ref=e225]: Step 5 of 7
+                  - progressbar [ref=e226]
+                - paragraph [ref=e228]: If plunging doesn't work, feed a 25-foot drain snake into the drain opening. Push it forward while cranking the handle clockwise. When you feel resistance, you've hit the clog — keep cranking to break through it or hook it. Pull the snake out slowly, wiping it with a rag as it comes. Run hot water for a minute to flush loosened debris.
+                - generic [ref=e230]: Hand feeding a coiled drain snake into a kitchen sink drain,...
+                - generic [ref=e231]:
+                  - text: Warning
+                  - paragraph [ref=e232]: Be gentle when snaking through the P-trap — too much force can push through the pipe joint. If you feel the snake hit a hard stop that won't give, stop and try cleaning the P-trap instead.
+              - generic [ref=e233]:
+                - text: "6"
+                - generic [ref=e234]:
+                  - generic [ref=e235]:
+                    - heading "Clean the P-Trap (If Needed)" [level=3] [ref=e236]
+                    - generic [ref=e237]: Step 6 of 7
+                  - progressbar [ref=e238]
+                - paragraph [ref=e240]: Place a bucket directly under the P-trap (the U-shaped pipe under the sink). Loosen the slip nuts on both ends of the P-trap by hand or with tongue-and-groove pliers — turn counterclockwise. Carefully lower the P-trap and dump its contents into the bucket. Clean the inside of the trap with a bottle brush or old toothbrush. Inspect the pipe going into the wall for blockages. Reinstall the P-trap, hand-tighten the slip nuts, then snug them a quarter turn with pliers.
+                - generic [ref=e242]: Underneath kitchen sink, hands removing the P-trap pipe into...
+                - generic [ref=e243]:
+                  - text: Pro Tip
+                  - paragraph [ref=e244]: Take a photo of the P-trap assembly before disassembling it so you remember the exact order and orientation of the parts.
+              - generic [ref=e245]:
+                - text: "7"
+                - generic [ref=e246]:
+                  - generic [ref=e247]:
+                    - heading "Test and Prevent Future Clogs" [level=3] [ref=e248]
+                    - generic [ref=e249]: Step 7 of 7
+                  - progressbar [ref=e250]
+                - paragraph [ref=e252]: Run hot water for a full minute to confirm the drain flows freely. Check under the sink for any leaks at the P-trap connections. To prevent future clogs, always run hot water after washing greasy dishes, use a sink strainer to catch food particles, and never pour cooking oil or grease down the drain. Once a month, flush the drain with the baking soda and vinegar method as preventive maintenance.
+                - generic [ref=e254]: Water flowing freely down a kitchen sink drain, person check...
+          - generic [ref=e255]:
+            - heading "Recommended Products" [level=2] [ref=e256]
+            - generic [ref=e257]:
+              - generic [ref=e258]:
+                - generic [ref=e259]: best-value
+                - img [ref=e261]
+                - generic [ref=e266]: FlexiSnake Drain Millipede Hair Clog Tool (5-pack)
+                - generic [ref=e267]:
+                  - paragraph [ref=e268]: Disposable 18-inch micro-hook drain tool that grabs hair and gunk. Thin enough for kitchen and bathroom drains. Just insert, twist, and pull.
+                  - generic [ref=e269]:
+                    - img [ref=e270]
+                    - img [ref=e272]
+                    - img [ref=e274]
+                    - img [ref=e276]
+                    - img [ref=e278]
+                    - generic [ref=e280]: (18.7K)
+                  - generic [ref=e281]:
+                    - generic [ref=e282]: $8.99
+                    - link "Amazon" [ref=e283] [cursor=pointer]:
+                      - /url: https://www.amazon.com/dp/B01DP87IF8
+                      - text: Amazon
+                      - img [ref=e284]
+              - generic [ref=e288]:
+                - generic [ref=e289]: our-pick
+                - img [ref=e291]
+                - generic [ref=e296]: RIDGID Kwik Spin+ Drain Snake (25 ft)
+                - generic [ref=e297]:
+                  - paragraph [ref=e298]: Professional-quality 1/4-inch drain cable with auto-feed and ergonomic pistol grip. Clears tough kitchen clogs that plungers can't handle.
+                  - generic [ref=e299]:
+                    - img [ref=e300]
+                    - img [ref=e302]
+                    - img [ref=e304]
+                    - img [ref=e306]
+                    - img [ref=e308]
+                    - generic [ref=e310]: (3.2K)
+                  - generic [ref=e311]:
+                    - generic [ref=e312]: $34.97
+                    - link "Home Depot" [ref=e313] [cursor=pointer]:
+                      - /url: https://www.homedepot.com/p/RIDGID-Kwik-Spin/312624282
+                      - text: Home Depot
+                      - img [ref=e314]
+              - generic [ref=e318]:
+                - img [ref=e320]
+                - generic [ref=e325]: OXO Good Grips Sink Plunger
+                - generic [ref=e326]:
+                  - paragraph [ref=e327]: Flat-bottom plunger designed specifically for sinks and tubs. The broad rubber cup creates a strong seal on flat surfaces.
+                  - generic [ref=e328]:
+                    - img [ref=e329]
+                    - img [ref=e331]
+                    - img [ref=e333]
+                    - img [ref=e335]
+                    - img [ref=e337]
+                    - generic [ref=e339]: (6.8K)
+                  - generic [ref=e340]:
+                    - generic [ref=e341]: $11.99
+                    - link "Amazon" [ref=e342] [cursor=pointer]:
+                      - /url: https://www.amazon.com/dp/B00004OCLJ
+                      - text: Amazon
+                      - img [ref=e343]
+              - generic [ref=e347]:
+                - generic [ref=e348]: budget
+                - img [ref=e350]
+                - generic [ref=e355]: OXO Good Grips Silicone Sink Strainer
+                - generic [ref=e356]:
+                  - paragraph [ref=e357]: Flexible silicone strainer catches food particles while letting water flow freely. Fits most standard drains and is dishwasher safe.
+                  - generic [ref=e358]:
+                    - img [ref=e359]
+                    - img [ref=e361]
+                    - img [ref=e363]
+                    - img [ref=e365]
+                    - img [ref=e367]
+                    - generic [ref=e369]: (22.4K)
+                  - generic [ref=e370]:
+                    - generic [ref=e371]: $6.99
+                    - link "Amazon" [ref=e372] [cursor=pointer]:
+                      - /url: https://www.amazon.com/dp/B00A2KD8NY
+                      - text: Amazon
+                      - img [ref=e373]
+            - paragraph [ref=e377]:
+              - strong [ref=e378]: "Affiliate Disclosure:"
+              - text: We earn a small commission when you buy through our links at no extra cost to you.
+          - generic [ref=e379]:
+            - heading "Tips & Warnings" [level=2] [ref=e380]
+            - generic [ref=e381]:
+              - generic [ref=e382]:
+                - generic [ref=e384]:
+                  - img [ref=e385]
+                  - generic [ref=e387]: Pro Tips
+                - list [ref=e389]:
+                  - listitem [ref=e390]:
+                    - img [ref=e391]
+                    - generic [ref=e394]: Never use chemical drain cleaners like Drano on a completely blocked drain — the caustic chemicals will just sit in the pipe and can damage it.
+                  - listitem [ref=e395]:
+                    - img [ref=e396]
+                    - generic [ref=e399]: Run hot water for 30 seconds after every dishwashing session to keep grease from solidifying in the pipes.
+                  - listitem [ref=e400]:
+                    - img [ref=e401]
+                    - generic [ref=e404]: A mesh sink strainer costs $3 and prevents 90% of kitchen clogs. It's the best $3 you'll ever spend.
+                  - listitem [ref=e405]:
+                    - img [ref=e406]
+                    - generic [ref=e409]: Keep a dedicated plunger under the kitchen sink — the small flat-bottom type, not the toilet kind.
+              - generic [ref=e410]:
+                - generic [ref=e412]:
+                  - img [ref=e413]
+                  - generic [ref=e415]: Safety Warnings
+                - list [ref=e417]:
+                  - listitem [ref=e418]:
+                    - img [ref=e419]
+                    - generic [ref=e421]: Never plunge or snake a drain after pouring chemical drain cleaner — the chemicals can splash back and burn your skin or eyes.
+                  - listitem [ref=e422]:
+                    - img [ref=e423]
+                    - generic [ref=e425]: If multiple drains in your house are clogged simultaneously, you likely have a main sewer line blockage. Call a professional.
+                  - listitem [ref=e426]:
+                    - img [ref=e427]
+                    - generic [ref=e429]: Do not pour boiling water into PVC pipes (white plastic). Use very hot tap water instead to avoid softening pipe joints.
+          - generic [ref=e430]:
+            - heading "Frequently Asked Questions" [level=2] [ref=e431]
+            - generic [ref=e432]:
+              - heading "Why shouldn't I use chemical drain cleaners?" [level=3] [ref=e434]:
+                - button "Why shouldn't I use chemical drain cleaners?" [ref=e435]:
+                  - text: Why shouldn't I use chemical drain cleaners?
+                  - img [ref=e436]
+              - heading "Can I unclog a double kitchen sink?" [level=3] [ref=e439]:
+                - button "Can I unclog a double kitchen sink?" [ref=e440]:
+                  - text: Can I unclog a double kitchen sink?
+                  - img [ref=e441]
+              - heading "How do I prevent kitchen sink clogs?" [level=3] [ref=e444]:
+                - button "How do I prevent kitchen sink clogs?" [ref=e445]:
+                  - text: How do I prevent kitchen sink clogs?
+                  - img [ref=e446]
+              - heading "My kitchen sink gurgles when I run water. What does that mean?" [level=3] [ref=e449]:
+                - button "My kitchen sink gurgles when I run water. What does that mean?" [ref=e450]:
+                  - text: My kitchen sink gurgles when I run water. What does that mean?
+                  - img [ref=e451]
+          - generic [ref=e453]:
+            - heading "Found this guide helpful?" [level=3] [ref=e454]
+            - paragraph [ref=e455]: Get more repair tutorials and maintenance checklists delivered to your inbox every week.
+            - generic [ref=e456]:
+              - textbox "Your email address" [ref=e457]
+              - button "Subscribe" [ref=e458] [cursor=pointer]:
+                - text: Subscribe
+                - img
+          - generic [ref=e459]:
+            - heading "Related Guides" [level=2] [ref=e460]
+            - generic [ref=e461]:
+              - link "Plumbing Beginner Friendly How to Fix a Running Toilet Stop that constant running sound and save up to $200 per year on your water bill. This beginner-friendly guide covers the three most common causes and how to fix each one in under 30 minutes." [ref=e462] [cursor=pointer]:
+                - /url: /guides/fix-running-toilet
+                - generic [ref=e463]:
+                  - generic [ref=e464]:
+                    - generic [ref=e465]:
+                      - generic [ref=e466]: Plumbing
+                      - generic [ref=e467]: Beginner Friendly
+                    - generic [ref=e468]: How to Fix a Running Toilet
+                  - paragraph [ref=e470]: Stop that constant running sound and save up to $200 per year on your water bill. This beginner-friendly guide covers the three most common causes and how to fix each one in under 30 minutes.
+              - link "Plumbing Intermediate How to Replace a Kitchen Faucet Upgrade your kitchen with a new faucet in about an hour. This intermediate guide covers removing the old faucet, installing the new one, and connecting the supply lines without leaks." [ref=e471] [cursor=pointer]:
+                - /url: /guides/replace-kitchen-faucet
+                - generic [ref=e472]:
+                  - generic [ref=e473]:
+                    - generic [ref=e474]:
+                      - generic [ref=e475]: Plumbing
+                      - generic [ref=e476]: Intermediate
+                    - generic [ref=e477]: How to Replace a Kitchen Faucet
+                  - paragraph [ref=e479]: Upgrade your kitchen with a new faucet in about an hour. This intermediate guide covers removing the old faucet, installing the new one, and connecting the supply lines without leaks.
+              - link "Plumbing Intermediate How to Fix a Leaky Pipe Joint A dripping pipe joint under the sink or in the basement can cause water damage and mold if left unchecked. Learn how to identify the type of joint and apply the right fix — from simple tightening to full re-soldering." [ref=e480] [cursor=pointer]:
+                - /url: /guides/fix-leaky-pipe-joint
+                - generic [ref=e481]:
+                  - generic [ref=e482]:
+                    - generic [ref=e483]:
+                      - generic [ref=e484]: Plumbing
+                      - generic [ref=e485]: Intermediate
+                    - generic [ref=e486]: How to Fix a Leaky Pipe Joint
+                  - paragraph [ref=e488]: A dripping pipe joint under the sink or in the basement can cause water damage and mold if left unchecked. Learn how to identify the type of joint and apply the right fix — from simple tightening to full re-soldering.
+        - complementary [ref=e489]:
+          - generic [ref=e490]:
+            - generic [ref=e491]:
+              - generic [ref=e493]: Quick Reference
+              - generic [ref=e494]:
+                - generic [ref=e495]:
+                  - generic [ref=e496]: Difficulty
+                  - generic [ref=e497]: Beginner Friendly
+                - generic [ref=e498]:
+                  - generic [ref=e499]: Time
+                  - generic [ref=e500]: 15-30 minutes
+                - generic [ref=e501]:
+                  - generic [ref=e502]: DIY Cost
+                  - generic [ref=e503]: $0 - $30
+                - generic [ref=e504]:
+                  - generic [ref=e505]: Steps
+                  - generic [ref=e506]: "7"
+                - generic [ref=e507]:
+                  - generic [ref=e508]: Tools
+                  - generic [ref=e509]: "6"
+            - generic [ref=e510]:
+              - generic [ref=e511]: best-value
+              - generic [ref=e512]:
+                - paragraph [ref=e513]: Top Pick
+                - generic [ref=e514]: FlexiSnake Drain Millipede Hair Clog Tool (5-pack)
+              - generic [ref=e515]:
+                - paragraph [ref=e516]: Disposable 18-inch micro-hook drain tool that grabs hair and gunk. Thin enough for kitchen and bathroom drains. Just insert, twist, and pull.
+                - generic [ref=e517]:
+                  - generic [ref=e518]: $8.99
+                  - generic [ref=e519]:
+                    - img [ref=e520]
+                    - img [ref=e522]
+                    - img [ref=e524]
+                    - img [ref=e526]
+                    - img [ref=e528]
+                - link "View on Amazon" [ref=e530] [cursor=pointer]:
+                  - /url: https://www.amazon.com/dp/B01DP87IF8
+                  - button "View on Amazon" [ref=e531]:
+                    - text: View on Amazon
+                    - img
+            - generic [ref=e532]:
+              - generic [ref=e534]: Weekly Repair Tips
+              - generic [ref=e535]:
+                - paragraph [ref=e536]: Get guides like this delivered to your inbox every week.
+                - generic [ref=e537]:
+                  - textbox "Your email" [ref=e538]
+                  - button "Subscribe Free" [ref=e539] [cursor=pointer]
+  - contentinfo [ref=e540]:
+    - generic [ref=e543]:
+      - generic [ref=e544]:
+        - heading "Get Weekly Repair Tips" [level=3] [ref=e545]
+        - paragraph [ref=e546]: Join 10,000+ homeowners who fix it right the first time.
+      - generic [ref=e547]:
+        - generic [ref=e548]:
+          - img [ref=e549]
+          - textbox "Enter your email" [ref=e552]
+        - button "Subscribe" [ref=e553] [cursor=pointer]:
+          - text: Subscribe
+          - img
+    - generic [ref=e555]:
+      - generic [ref=e556]:
+        - link "Repair & Refinish" [ref=e557] [cursor=pointer]:
+          - /url: /
+          - img [ref=e559]
+          - generic [ref=e561]: Repair & Refinish
+        - paragraph [ref=e562]: Expert home repair and improvement guides written by professional contractors. We help you fix it right the first time with clear, step-by-step instructions.
+        - generic [ref=e563]:
+          - link "Facebook" [ref=e564] [cursor=pointer]:
+            - /url: https://facebook.com
+            - img [ref=e565]
+          - link "Instagram" [ref=e567] [cursor=pointer]:
+            - /url: https://instagram.com
+            - img [ref=e568]
+          - link "YouTube" [ref=e571] [cursor=pointer]:
+            - /url: https://youtube.com
+            - img [ref=e572]
+          - link "Pinterest" [ref=e575] [cursor=pointer]:
+            - /url: https://pinterest.com
+            - img [ref=e576]
+      - generic [ref=e580]:
+        - heading "Categories" [level=4] [ref=e581]
+        - list [ref=e582]:
+          - listitem [ref=e583]:
+            - link "Plumbing" [ref=e584] [cursor=pointer]:
+              - /url: /categories/plumbing
+          - listitem [ref=e585]:
+            - link "Electrical" [ref=e586] [cursor=pointer]:
+              - /url: /categories/electrical
+          - listitem [ref=e587]:
+            - link "Painting & Walls" [ref=e588] [cursor=pointer]:
+              - /url: /categories/painting-walls
+          - listitem [ref=e589]:
+            - link "Flooring" [ref=e590] [cursor=pointer]:
+              - /url: /categories/flooring
+          - listitem [ref=e591]:
+            - link "Kitchen & Bath" [ref=e592] [cursor=pointer]:
+              - /url: /categories/kitchen-bath
+          - listitem [ref=e593]:
+            - link "Doors & Windows" [ref=e594] [cursor=pointer]:
+              - /url: /categories/doors-windows
+          - listitem [ref=e595]:
+            - link "HVAC & Climate" [ref=e596] [cursor=pointer]:
+              - /url: /categories/hvac-climate
+          - listitem [ref=e597]:
+            - link "Outdoor & Landscaping" [ref=e598] [cursor=pointer]:
+              - /url: /categories/outdoor-landscaping
+          - listitem [ref=e599]:
+            - link "Appliance Repair" [ref=e600] [cursor=pointer]:
+              - /url: /categories/appliance-repair
+          - listitem [ref=e601]:
+            - link "Furniture & Decor" [ref=e602] [cursor=pointer]:
+              - /url: /categories/furniture-decor
+      - generic [ref=e603]:
+        - heading "Resources" [level=4] [ref=e604]
+        - list [ref=e605]:
+          - listitem [ref=e606]:
+            - link "Getting Started" [ref=e607] [cursor=pointer]:
+              - /url: /getting-started
+          - listitem [ref=e608]:
+            - link "Tool Reviews" [ref=e609] [cursor=pointer]:
+              - /url: /tool-reviews
+          - listitem [ref=e610]:
+            - link "Safety Tips" [ref=e611] [cursor=pointer]:
+              - /url: /safety
+          - listitem [ref=e612]:
+            - link "Cost Calculators" [ref=e613] [cursor=pointer]:
+              - /url: /calculators
+          - listitem [ref=e614]:
+            - link "FAQ" [ref=e615] [cursor=pointer]:
+              - /url: /faq
+      - generic [ref=e616]:
+        - heading "Connect" [level=4] [ref=e617]
+        - list [ref=e618]:
+          - listitem [ref=e619]:
+            - link "Contact Us" [ref=e620] [cursor=pointer]:
+              - /url: /contact
+          - listitem [ref=e621]:
+            - link "Write for Us" [ref=e622] [cursor=pointer]:
+              - /url: /write-for-us
+          - listitem [ref=e623]:
+            - link "Advertise" [ref=e624] [cursor=pointer]:
+              - /url: /advertise
+          - listitem [ref=e625]:
+            - link "hello@repairandrefinish.com" [ref=e626] [cursor=pointer]:
+              - /url: mailto:hello@repairandrefinish.com
+    - paragraph [ref=e629]:
+      - strong [ref=e630]: "Affiliate Disclosure:"
+      - text: Repair & Refinish is reader-supported. When you buy through links on our site, we may earn an affiliate commission at no additional cost to you. This helps us continue creating free, in-depth repair guides. We only recommend products we've tested or thoroughly researched.
+    - generic [ref=e632]:
+      - paragraph [ref=e633]: © 2026 Repair & Refinish. All rights reserved.
+      - generic [ref=e634]:
+        - link "Privacy Policy" [ref=e635] [cursor=pointer]:
+          - /url: /privacy
+        - link "Terms of Service" [ref=e636] [cursor=pointer]:
+          - /url: /terms
+        - link "Sitemap" [ref=e637] [cursor=pointer]:
+          - /url: /sitemap.xml
+  - region "Notifications (F8)":
+    - list
+  - button "Open Next.js Dev Tools" [ref=e643] [cursor=pointer]:
+    - img [ref=e644]
+  - alert [ref=e647]
+```

@@ -1,0 +1,205 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Repair & Refinish FIX IT RIGHT THE FIRST TIME" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e7]
+        - generic [ref=e9]:
+          - generic [ref=e10]: Repair & Refinish
+          - generic [ref=e11]: FIX IT RIGHT THE FIRST TIME
+      - navigation [ref=e12]:
+        - link "Guides" [ref=e13] [cursor=pointer]:
+          - /url: /guides
+        - button "Categories" [ref=e15] [cursor=pointer]:
+          - text: Categories
+          - img [ref=e16]
+        - link "Tools & Products" [ref=e18] [cursor=pointer]:
+          - /url: /tools-products
+        - link "About" [ref=e19] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e20]:
+        - generic [ref=e23]:
+          - img [ref=e24]
+          - textbox "Search guides..." [ref=e27]
+          - generic [ref=e28]:
+            - generic:
+              - img
+              - text: K
+        - link "Get Free Guide" [ref=e29] [cursor=pointer]:
+          - /url: /free-guide
+  - main [ref=e30]:
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: "404"
+        - heading "Page Not Found" [level=1] [ref=e35]
+        - paragraph [ref=e36]: The page you're looking for doesn't exist or may have been moved. Try searching for what you need or browse our popular content below.
+      - generic [ref=e38]:
+        - img [ref=e39]
+        - textbox "Search for a guide..." [ref=e42]
+      - generic [ref=e43]:
+        - link "Go Home" [ref=e44] [cursor=pointer]:
+          - /url: /
+          - img
+          - text: Go Home
+        - link "Browse Guides" [ref=e45] [cursor=pointer]:
+          - /url: /guides
+          - img
+          - text: Browse Guides
+      - generic [ref=e46]:
+        - heading "Popular Guides" [level=2] [ref=e47]
+        - generic [ref=e48]:
+          - link "How to Refinish a Wood Table 6-8 hours (spread over 2 days) · Intermediate" [ref=e49] [cursor=pointer]:
+            - /url: /guides/refinish-wood-table
+            - generic [ref=e51]:
+              - generic [ref=e52]:
+                - paragraph [ref=e53]: How to Refinish a Wood Table
+                - paragraph [ref=e54]: 6-8 hours (spread over 2 days) · Intermediate
+              - img [ref=e55]
+          - link "How to Fix a Dryer That's Not Heating 30-45 minutes · Intermediate" [ref=e57] [cursor=pointer]:
+            - /url: /guides/fix-dryer-not-heating
+            - generic [ref=e59]:
+              - generic [ref=e60]:
+                - paragraph [ref=e61]: How to Fix a Dryer That's Not Heating
+                - paragraph [ref=e62]: 30-45 minutes · Intermediate
+              - img [ref=e63]
+          - link "How to Clean a Dishwasher That's Not Draining 20-30 minutes · Beginner" [ref=e65] [cursor=pointer]:
+            - /url: /guides/clean-dishwasher-not-draining
+            - generic [ref=e67]:
+              - generic [ref=e68]:
+                - paragraph [ref=e69]: How to Clean a Dishwasher That's Not Draining
+                - paragraph [ref=e70]: 20-30 minutes · Beginner
+              - img [ref=e71]
+      - generic [ref=e73]:
+        - heading "Browse Categories" [level=2] [ref=e74]
+        - generic [ref=e75]:
+          - link "Plumbing" [ref=e76] [cursor=pointer]:
+            - /url: /categories/plumbing
+          - link "Electrical" [ref=e77] [cursor=pointer]:
+            - /url: /categories/electrical
+          - link "Painting & Walls" [ref=e78] [cursor=pointer]:
+            - /url: /categories/painting-walls
+          - link "Flooring" [ref=e79] [cursor=pointer]:
+            - /url: /categories/flooring
+          - link "Kitchen & Bath" [ref=e80] [cursor=pointer]:
+            - /url: /categories/kitchen-bath
+          - link "Doors & Windows" [ref=e81] [cursor=pointer]:
+            - /url: /categories/doors-windows
+  - contentinfo [ref=e82]:
+    - generic [ref=e85]:
+      - generic [ref=e86]:
+        - heading "Get Weekly Repair Tips" [level=3] [ref=e87]
+        - paragraph [ref=e88]: Join 10,000+ homeowners who fix it right the first time.
+      - generic [ref=e89]:
+        - generic [ref=e90]:
+          - img [ref=e91]
+          - textbox "Enter your email" [ref=e94]
+        - button "Subscribe" [ref=e95] [cursor=pointer]:
+          - text: Subscribe
+          - img
+    - generic [ref=e97]:
+      - generic [ref=e98]:
+        - link "Repair & Refinish" [ref=e99] [cursor=pointer]:
+          - /url: /
+          - img [ref=e101]
+          - generic [ref=e103]: Repair & Refinish
+        - paragraph [ref=e104]: Expert home repair and improvement guides written by professional contractors. We help you fix it right the first time with clear, step-by-step instructions.
+        - generic [ref=e105]:
+          - link "Facebook" [ref=e106] [cursor=pointer]:
+            - /url: https://facebook.com
+            - img [ref=e107]
+          - link "Instagram" [ref=e109] [cursor=pointer]:
+            - /url: https://instagram.com
+            - img [ref=e110]
+          - link "YouTube" [ref=e113] [cursor=pointer]:
+            - /url: https://youtube.com
+            - img [ref=e114]
+          - link "Pinterest" [ref=e117] [cursor=pointer]:
+            - /url: https://pinterest.com
+            - img [ref=e118]
+      - generic [ref=e122]:
+        - heading "Categories" [level=4] [ref=e123]
+        - list [ref=e124]:
+          - listitem [ref=e125]:
+            - link "Plumbing" [ref=e126] [cursor=pointer]:
+              - /url: /categories/plumbing
+          - listitem [ref=e127]:
+            - link "Electrical" [ref=e128] [cursor=pointer]:
+              - /url: /categories/electrical
+          - listitem [ref=e129]:
+            - link "Painting & Walls" [ref=e130] [cursor=pointer]:
+              - /url: /categories/painting-walls
+          - listitem [ref=e131]:
+            - link "Flooring" [ref=e132] [cursor=pointer]:
+              - /url: /categories/flooring
+          - listitem [ref=e133]:
+            - link "Kitchen & Bath" [ref=e134] [cursor=pointer]:
+              - /url: /categories/kitchen-bath
+          - listitem [ref=e135]:
+            - link "Doors & Windows" [ref=e136] [cursor=pointer]:
+              - /url: /categories/doors-windows
+          - listitem [ref=e137]:
+            - link "HVAC & Climate" [ref=e138] [cursor=pointer]:
+              - /url: /categories/hvac-climate
+          - listitem [ref=e139]:
+            - link "Outdoor & Landscaping" [ref=e140] [cursor=pointer]:
+              - /url: /categories/outdoor-landscaping
+          - listitem [ref=e141]:
+            - link "Appliance Repair" [ref=e142] [cursor=pointer]:
+              - /url: /categories/appliance-repair
+          - listitem [ref=e143]:
+            - link "Furniture & Decor" [ref=e144] [cursor=pointer]:
+              - /url: /categories/furniture-decor
+      - generic [ref=e145]:
+        - heading "Resources" [level=4] [ref=e146]
+        - list [ref=e147]:
+          - listitem [ref=e148]:
+            - link "Getting Started" [ref=e149] [cursor=pointer]:
+              - /url: /getting-started
+          - listitem [ref=e150]:
+            - link "Tool Reviews" [ref=e151] [cursor=pointer]:
+              - /url: /tool-reviews
+          - listitem [ref=e152]:
+            - link "Safety Tips" [ref=e153] [cursor=pointer]:
+              - /url: /safety
+          - listitem [ref=e154]:
+            - link "Cost Calculators" [ref=e155] [cursor=pointer]:
+              - /url: /calculators
+          - listitem [ref=e156]:
+            - link "FAQ" [ref=e157] [cursor=pointer]:
+              - /url: /faq
+      - generic [ref=e158]:
+        - heading "Connect" [level=4] [ref=e159]
+        - list [ref=e160]:
+          - listitem [ref=e161]:
+            - link "Contact Us" [ref=e162] [cursor=pointer]:
+              - /url: /contact
+          - listitem [ref=e163]:
+            - link "Write for Us" [ref=e164] [cursor=pointer]:
+              - /url: /write-for-us
+          - listitem [ref=e165]:
+            - link "Advertise" [ref=e166] [cursor=pointer]:
+              - /url: /advertise
+          - listitem [ref=e167]:
+            - link "hello@repairandrefinish.com" [ref=e168] [cursor=pointer]:
+              - /url: mailto:hello@repairandrefinish.com
+    - paragraph [ref=e171]:
+      - strong [ref=e172]: "Affiliate Disclosure:"
+      - text: Repair & Refinish is reader-supported. When you buy through links on our site, we may earn an affiliate commission at no additional cost to you. This helps us continue creating free, in-depth repair guides. We only recommend products we've tested or thoroughly researched.
+    - generic [ref=e174]:
+      - paragraph [ref=e175]: © 2026 Repair & Refinish. All rights reserved.
+      - generic [ref=e176]:
+        - link "Privacy Policy" [ref=e177] [cursor=pointer]:
+          - /url: /privacy
+        - link "Terms of Service" [ref=e178] [cursor=pointer]:
+          - /url: /terms
+        - link "Sitemap" [ref=e179] [cursor=pointer]:
+          - /url: /sitemap.xml
+  - region "Notifications (F8)":
+    - list
+  - button "Open Next.js Dev Tools" [ref=e185] [cursor=pointer]:
+    - img [ref=e186]
+  - alert [ref=e189]
+```
