@@ -65,9 +65,22 @@ export function EmailCaptureForm({
 
     setLoading(true);
 
-    // Simulate API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name: name || undefined,
+          source: variant === 'banner' ? 'banner' : variant === 'modal' ? 'exit-intent' : 'inline',
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Subscription failed');
+      }
+
       setSuccess(true);
       trackNewsletterSignup(variant, email);
       trackEmailCapture(variant === 'banner' ? 'inline' : variant === 'modal' ? 'exit-intent' : 'inline');
