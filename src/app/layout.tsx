@@ -97,6 +97,18 @@ export function generateMetadata(): Metadata {
       title: site.name,
       description,
     },
+    verification: {
+      google: process.env.SITE_VERIFICATION_GOOGLE || undefined,
+      other: {
+        // Awin publisher verification renders as <meta name="verification">
+        ...(process.env.SITE_VERIFICATION_AWIN
+          ? { verification: [process.env.SITE_VERIFICATION_AWIN] }
+          : {}),
+        ...(process.env.SITE_VERIFICATION_IMPACT
+          ? { 'impact-site-verification': [process.env.SITE_VERIFICATION_IMPACT] }
+          : {}),
+      },
+    },
   };
 }
 
