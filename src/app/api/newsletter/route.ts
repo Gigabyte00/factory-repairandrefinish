@@ -1,0 +1,111 @@
+import { NextResponse } from 'next/server';
+import { rateLimit } from '@/lib/rate-limit';
+import { createServerClient } from '@/lib/supabase';
+import { getSiteConfig } from '@/lib/site-config';
+import { sendNewsletterWelcome, sendLeadMagnetEmail } from '@/lib/email';
+import { getLeadMagnet } from '@/lib/lead-magnets';
+import { z } from 'zod';
+
+const subscribeSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  name: z.string().optional(),
+  source: z.string().optional(),
+  metadata: z.record(z.string()).optional(),
+  site_id: z.string().optional(), // accepted but ignored — server derives it
+  website: z.string().optional(), // honeypot — bots fill this, humans don't
+});
+
+export async function POST(request: Request) {
+  try {
+    const forwarded = request.headers.get('x-forwarded-for');
+    const ip = forwarded?.split(',')[0].trim() || 'unknown';
+    const { allowed } = rateLimit(ip, 3, 15 * 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Too many requests' },
+        { status: 429, headers: { 'Retry-After': '900' } }
+      );
+    }
+
+    const body = await request.json();
+    const data = subscribeSchema.parse(body);
+
+    // Honeypot triggered — silent success
+    if (data.website) {
+      return NextResponse.json({ success: true });
+    }
+
+    const site = getSiteConfig();
+    const supabase = createServerClient();
+
+    const { data: rows, error } = await supabase
+      .from('newsletter_subscribers')
+      .upsert(
+        {
+          site_id: site.id,
+          email: data.email,
+          name: data.name || null,
+          source: data.source || null,
+          metadata: data.metadata || {},
+        },
+        { onConflict: 'site_id,email', ignoreDuplicates: true }
+      )
+      .select('id');
+
+    if (error) {
+      console.error('Newsletter subscribe error:', error);
+      return NextResponse.json(
+        { success: false, error: 'Failed to subscribe' },
+        { status: 500 }
+      );
+    }
+
+    // Lead magnet signups also get a "Your download" delivery email —
+    // sent even for existing subscribers (they asked for the download)
+    const source = data.source || '';
+    if (source.startsWith('lead_magnet_') || source.startsWith('inline_magnet_')) {
+      const magnetSlug = process.env.LEAD_MAGNET_SLUG?.trim();
+      const magnet = magnetSlug ? getLeadMagnet(magnetSlug) : null;
+      if (magnet) sendLeadMagnetEmail(data.email, magnet);
+    }
+
+    // Only send welcome email for genuinely new subscribers
+    if (rows && rows.length > 0) {
+      sendNewsletterWelcome(data.email, data.name || undefined);
+
+      // Enroll in active email sequence (fire-and-forget — never block the response)
+      const subscriberId = rows[0].id;
+      supabase
+        .from('email_sequences')
+        .select('id')
+        .eq('site_id', site.id)
+        .eq('status', 'active')
+        .eq('trigger_event', 'newsletter_signup')
+        .limit(1)
+        .single()
+        .then(({ data: seq }) => {
+          if (seq) {
+            supabase
+              .from('subscriber_sequence_state')
+              .insert({ subscriber_id: subscriberId, sequence_id: seq.id, current_step: 0, status: 'active' })
+              .then(() => {})
+              .catch(console.error);
+          }
+        })
+        .catch(console.error);
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { success: false, error: 'Please enter a valid email address' },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json(
+      { success: false, error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}

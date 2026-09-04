@@ -1,0 +1,44 @@
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+export function trackEvent(name: string, props?: Record<string, string | number>) {
+  if (typeof window !== 'undefined') {
+    window.gtag?.('event', name, props);
+  }
+}
+
+export function trackAffiliateClick(brand: string, placement: string) {
+  trackEvent('affiliate_click', {
+    event_category: 'conversion',
+    affiliate_brand: brand,
+    brand,
+    placement,
+  });
+}
+
+export function trackToolUsage(toolName: string, action: string = 'calculate') {
+  trackEvent('tool_usage', {
+    event_category: 'engagement',
+    tool: toolName,
+    action,
+  });
+}
+
+export function trackNewsletterSignup(placement: string) {
+  trackEvent('newsletter_signup', {
+    event_category: 'conversion',
+    method: 'newsletter',
+    placement,
+  });
+}
+
+export function trackLeadGen(type: string, brand?: string) {
+  trackEvent('generate_lead', {
+    event_category: 'conversion',
+    lead_type: type,
+    ...(brand ? { affiliate_brand: brand } : {}),
+  });
+}

@@ -1,0 +1,386 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* eBike Revolt editorial palette — Wave 13a (electric blue / graphite) */
+    --background: 215 25% 97%;
+    --foreground: 220 25% 10%;
+
+    --card: 215 25% 97%;
+    --card-foreground: 220 25% 10%;
+
+    --popover: 215 25% 97%;
+    --popover-foreground: 220 25% 10%;
+
+    --primary: 212 90% 45%;
+    --primary-foreground: 215 25% 97%;
+
+    --secondary: 215 20% 90%;
+    --secondary-foreground: 220 25% 10%;
+
+    --muted: 215 20% 90%;
+    --muted-foreground: 220 12% 38%;
+
+    --accent: 200 80% 88%;
+    --accent-foreground: 220 25% 10%;
+
+    --destructive: 0 84.2% 50.5%;
+    --destructive-foreground: 215 25% 97%;
+
+    --border: 215 18% 86%;
+    --input: 215 18% 86%;
+    --ring: 212 90% 45%;
+
+    --radius: 0.5rem;
+
+    --color-primary: hsl(var(--primary));
+    --color-accent: hsl(var(--accent));
+    --font-sans: var(--font-inter, 'Inter'), system-ui, sans-serif;
+    --font-serif: var(--font-cormorant, 'Cormorant Garamond'), Georgia, serif;
+
+    /* Claude Design editorial component tokens (Wave 13a) */
+    --color-cream:   #F4F7FB;
+    --color-blush:   #D6E4F5;
+    --color-jade:    #1E73D6;
+    --color-jade-50: #E5EFFB;
+    --color-ink:     #101826;
+    --color-mute:    #697287;
+    --color-line:    #DDE4ED;
+  }
+
+  .dark {
+    /* eBike Revolt dark — deep graphite matching the Claude Design #0a0d12 hero base */
+    --background: 220 28% 8%;
+    --foreground: 215 18% 92%;
+
+    --card: 220 25% 11%;
+    --card-foreground: 215 18% 92%;
+
+    --popover: 220 25% 11%;
+    --popover-foreground: 215 18% 92%;
+
+    --primary: 212 85% 65%;
+    --primary-foreground: 220 28% 8%;
+
+    --secondary: 220 20% 16%;
+    --secondary-foreground: 215 18% 92%;
+
+    --muted: 220 20% 16%;
+    --muted-foreground: 215 15% 58%;
+
+    --accent: 200 65% 40%;
+    --accent-foreground: 215 18% 92%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 215 18% 92%;
+
+    --border: 220 20% 18%;
+    --input: 220 20% 18%;
+    --ring: 212 85% 65%;
+
+    --color-primary: hsl(var(--primary));
+    --color-accent: hsl(var(--accent));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Global focus ring — covers all interactive elements for keyboard users */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+/* Affiliate link disclosure styling */
+.affiliate-disclosure {
+  @apply text-sm text-muted-foreground italic my-4 p-3 bg-muted rounded-lg border-l-4 border-primary;
+}
+
+/* Post content styling - extends typography plugin */
+.prose {
+  @apply max-w-none;
+}
+
+/* Fluid typography — smooth scaling instead of breakpoint jumps */
+h1, .text-hero { font-size: clamp(2.25rem, 5vw, 3.75rem); }
+h2, .text-section { font-size: clamp(1.75rem, 3.5vw, 2.5rem); }
+
+.prose h1,
+h1, h2, h3 {
+  font-family: var(--font-heading, var(--font-serif));
+}
+
+.prose h1 {
+  @apply text-3xl font-bold mb-4 mt-8 text-foreground;
+}
+
+.prose h2 {
+  @apply text-2xl font-semibold mb-3 mt-6 text-foreground;
+}
+
+.prose h3 {
+  @apply text-xl font-medium mb-2 mt-4 text-foreground;
+}
+
+.prose p {
+  @apply mb-4 leading-relaxed text-foreground;
+}
+
+.prose ul,
+.prose ol {
+  @apply mb-4 pl-6;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+.prose a {
+  @apply text-primary underline hover:opacity-80;
+}
+
+.prose img {
+  @apply rounded-lg my-4;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-primary pl-4 italic my-4 text-muted-foreground;
+}
+
+.prose code {
+  @apply bg-muted px-1 py-0.5 rounded text-sm;
+}
+
+.prose pre {
+  @apply bg-card text-card-foreground p-4 rounded-lg overflow-x-auto my-4 border;
+}
+
+/* Legacy utility classes for backwards compatibility */
+.text-primary {
+  color: hsl(var(--primary));
+}
+
+.bg-primary {
+  background-color: hsl(var(--primary));
+}
+
+.border-primary {
+  border-color: hsl(var(--primary));
+}
+
+/* Site secondary color — set via SITE_SECONDARY_COLOR env var */
+.text-site-secondary { color: hsl(var(--site-secondary, var(--primary))); }
+.bg-site-secondary { background-color: hsl(var(--site-secondary, var(--primary))); }
+.border-site-secondary { border-color: hsl(var(--site-secondary, var(--primary))); }
+
+/* Animations for shadcn components */
+@keyframes enter {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0)
+      scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1))
+      rotate(var(--tw-enter-rotate, 0));
+  }
+}
+
+@keyframes exit {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0)
+      scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1))
+      rotate(var(--tw-exit-rotate, 0));
+  }
+}
+
+/* ── Scroll-driven fade-in (IntersectionObserver-based) ── */
+/*
+ * Content is always visible by default. JS toggles data-revealed=true via
+ * useReveal() / RevealOnScroll wrapper when the element scrolls into view,
+ * giving a fade-up motion. If JS is disabled, content stays visible (no
+ * "blank page" failure mode).
+ */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reveal-on-scroll wrapper — content always visible, no animation.
+ * Earlier the fade-in-up keyframe started at opacity:0 which caused a
+ * flash when the observer added data-revealed=true (visible → invisible
+ * → visible). Removed entirely to eliminate flickering. */
+[data-reveal] {
+  opacity: 1;
+}
+
+/* Stagger children inside a stagger container after parent is revealed */
+[data-reveal][data-revealed="true"] .stagger-child {
+  animation: fade-in-up 0.5s ease-out both;
+}
+[data-reveal][data-revealed="true"] .stagger-child:nth-child(2) { animation-delay: 0.08s; }
+[data-reveal][data-revealed="true"] .stagger-child:nth-child(3) { animation-delay: 0.16s; }
+[data-reveal][data-revealed="true"] .stagger-child:nth-child(4) { animation-delay: 0.24s; }
+[data-reveal][data-revealed="true"] .stagger-child:nth-child(5) { animation-delay: 0.32s; }
+[data-reveal][data-revealed="true"] .stagger-child:nth-child(6) { animation-delay: 0.40s; }
+
+/* ── Display type utilities ── */
+.text-display-hero {
+  font-size: clamp(2.5rem, 4vw + 1rem, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+.text-display-section {
+  font-size: clamp(2rem, 2.5vw + 0.75rem, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+.text-display-stat {
+  font-size: clamp(2.5rem, 4vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── .animate-on-scroll / .stagger-children (progressive enhancement, JS-gated) ──
+   Content is fully visible by default (SSR, no-JS, reduced-motion, old
+   browsers). The <ScrollReveal /> client component first marks everything
+   already in the viewport as .is-revealed, THEN adds `js-anim` to <html>,
+   so enabling the hidden state can never blank visible content. Remaining
+   elements are revealed by IntersectionObserver (generous rootMargin) with
+   a 2s failsafe that reveals everything. Elements are never re-hidden. */
+.animate-on-scroll {
+  opacity: 1;
+}
+.stagger-children > * {
+  opacity: 1;
+}
+html.js-anim .animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+}
+html.js-anim .animate-on-scroll.is-revealed {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Stagger children in grids — container is observed, children cascade in */
+html.js-anim .stagger-children > * {
+  opacity: 0;
+  transform: translateY(16px);
+}
+html.js-anim .stagger-children.is-revealed > * {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+html.js-anim .stagger-children.is-revealed > *:nth-child(2) { transition-delay: 0.1s; }
+html.js-anim .stagger-children.is-revealed > *:nth-child(3) { transition-delay: 0.2s; }
+html.js-anim .stagger-children.is-revealed > *:nth-child(4) { transition-delay: 0.3s; }
+html.js-anim .stagger-children.is-revealed > *:nth-child(5) { transition-delay: 0.4s; }
+html.js-anim .stagger-children.is-revealed > *:nth-child(6) { transition-delay: 0.5s; }
+
+/* ── Hero-to-content wave divider ── */
+.section-divider-wave {
+  position: relative;
+  margin-top: -1px;
+}
+.section-divider-wave::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 48px;
+  background: linear-gradient(to bottom, hsl(var(--foreground) / 0.12), transparent);
+}
+
+/* ── Reduced motion — WCAG 2.1 AA compliance ── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal],
+  [data-reveal]:not([data-revealed="true"]),
+  .animate-on-scroll,
+  .stagger-children > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── Page load fade-in (progressive enhancement, Chrome 117+) ── */
+@supports (animation-timeline: scroll()) {
+  main {
+    animation: fade-in-up 0.3s ease-out both;
+  }
+}
+
+/* ── Print stylesheet ── */
+@media print {
+  header,
+  footer,
+  nav,
+  .sticky,
+  aside,
+  button:not([data-print]),
+  .newsletter-signup,
+  [class*="sticky"] {
+    display: none !important;
+  }
+  body {
+    background: white;
+    color: black;
+    font-size: 12pt;
+  }
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+  .prose {
+    max-width: 100%;
+  }
+  img {
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
