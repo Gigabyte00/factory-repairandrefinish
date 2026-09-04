@@ -4,6 +4,7 @@ import type { Post, Category } from '@/types';
 import { notFound } from 'next/navigation';
 import { getTemplate, getDefaultVariant } from '@/lib/templates/registry';
 import JsonLd from '@/components/JsonLd';
+import RelatedOffersRail from '@/components/offers/RelatedOffersRail';
 import { canonicalUrl } from '@/lib/seo';
 import { normalizeArticleHeadings, rewriteAmazonLinksToGo } from '@/lib/article-content';
 
@@ -288,6 +289,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         relatedPosts={relatedPosts || []}
         site={site}
       />
+      <RelatedOffersRail relatedOfferIds={(post as any).related_offer_ids} siteId={site.id} />
     </>
   );
 }
