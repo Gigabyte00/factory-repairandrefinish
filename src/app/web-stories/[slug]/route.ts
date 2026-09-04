@@ -9,6 +9,16 @@ interface RouteParams {
   params: Promise<{ slug: string }>;
 }
 
+// Stored-XSS hardening: escape DB-sourced fields before HTML templating, and
+// allow only http(s)/relative URLs into href/src attributes.
+const esc = (v: unknown) => String(v ?? '')
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+const safeUrl = (v: unknown) => {
+  const s = String(v ?? '');
+  return /^(https?:\/\/|\/)/i.test(s) ? s : '';
+};
+
 /**
  * Generate AMP Web Story HTML
  *
@@ -32,14 +42,14 @@ function generateAMPStoryHTML(story: WebStory, site: ReturnType<typeof getSiteCo
       return `
     <amp-story-page id="cover">
       <amp-story-grid-layer template="fill">
-        <amp-img src="${slide.image}"
+        <amp-img src="${esc(safeUrl(slide.image))}"
                  width="720" height="1280"
                  layout="responsive"
-                 alt="${slide.imageAlt || story.title}">
+                 alt="${esc(slide.imageAlt || story.title)}">
         </amp-img>
       </amp-story-grid-layer>
       <amp-story-grid-layer template="vertical" class="bottom">
-        <h1 style="color: ${textColor}; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); padding: 20px;">${story.title}</h1>
+        <h1 style="color: ${textColor}; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); padding: 20px;">${esc(story.title)}</h1>
       </amp-story-grid-layer>
     </amp-story-page>`;
     }
@@ -47,21 +57,21 @@ function generateAMPStoryHTML(story: WebStory, site: ReturnType<typeof getSiteCo
     // Content slides
     let textHTML = '';
     if (slide.text) {
-      const textStyle = `color: ${textColor}; background: rgba(0,0,0,0.7); padding: 16px; border-radius: 8px;`;
+      const textStyle = `color: ${esc(textColor)}; background: rgba(0,0,0,0.7); padding: 16px; border-radius: 8px;`;
       textHTML = `
-      <amp-story-grid-layer template="${textPosition === 'center' ? 'vertical' : textPosition}">
-        <p style="${textStyle}">${slide.text}</p>
-        ${slide.link ? `<a href="${slide.link}" style="color: ${site.theme_config?.primaryColor || '#3B82F6'}; margin-top: 12px;">${slide.linkText || 'Learn More'}</a>` : ''}
+      <amp-story-grid-layer template="${esc(textPosition === 'center' ? 'vertical' : textPosition)}">
+        <p style="${textStyle}">${esc(slide.text)}</p>
+        ${safeUrl(slide.link) ? `<a href="${esc(safeUrl(slide.link))}" style="color: ${esc(site.theme_config?.primaryColor || '#3B82F6')}; margin-top: 12px;">${esc(slide.linkText || 'Learn More')}</a>` : ''}
       </amp-story-grid-layer>`;
     }
 
     return `
     <amp-story-page id="page-${index}">
-      <amp-story-grid-layer template="fill" style="background-color: ${bgColor};">
-        <amp-img src="${slide.image}"
+      <amp-story-grid-layer template="fill" style="background-color: ${esc(bgColor)};">
+        <amp-img src="${esc(safeUrl(slide.image))}"
                  width="720" height="1280"
                  layout="responsive"
-                 alt="${slide.imageAlt || `Slide ${index + 1}`}">
+                 alt="${esc(slide.imageAlt || `Slide ${index + 1}`)}">
         </amp-img>
       </amp-story-grid-layer>
       ${textHTML}
@@ -97,7 +107,7 @@ function generateAMPStoryHTML(story: WebStory, site: ReturnType<typeof getSiteCo
 <html ⚡ lang="en">
 <head>
   <meta charset="utf-8">
-  <title>${story.title} | ${site.name}</title>
+  <title>${esc(story.title)} | ${esc(site.name)}</title>
   <link rel="canonical" href="${storyUrl}">
   <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
 
@@ -121,16 +131,16 @@ function generateAMPStoryHTML(story: WebStory, site: ReturnType<typeof getSiteCo
   </style>
 
   <!-- Structured Data -->
-  <script type="application/ld+json">${JSON.stringify(structuredData)}</script>
+  <script type="application/ld+json">${JSON.stringify(structuredData).replace(/</g, '\\u003c')}</script>
 </head>
 <body>
   <amp-story standalone
-             title="${story.title}"
-             publisher="${site.name}"
-             publisher-logo-src="${publisherLogo}"
-             poster-portrait-src="${story.poster_image_url || slides[0]?.image || ''}"
-             poster-square-src="${story.poster_image_url || slides[0]?.image || ''}"
-             poster-landscape-src="${story.poster_image_url || slides[0]?.image || ''}">
+             title="${esc(story.title)}"
+             publisher="${esc(site.name)}"
+             publisher-logo-src="${esc(safeUrl(publisherLogo))}"
+             poster-portrait-src="${esc(safeUrl(story.poster_image_url || slides[0]?.image))}"
+             poster-square-src="${esc(safeUrl(story.poster_image_url || slides[0]?.image))}"
+             poster-landscape-src="${esc(safeUrl(story.poster_image_url || slides[0]?.image))}">
 
     ${slidesHTML}
 
@@ -143,7 +153,7 @@ function generateAMPStoryHTML(story: WebStory, site: ReturnType<typeof getSiteCo
           "components": [
             {
               "type": "heading",
-              "text": "More from ${site.name}"
+              "text": "More from ${esc(site.name)}"
             },
             {
               "type": "cta-link",

@@ -109,7 +109,7 @@ export default async function AuthorPage({ params }: PageProps) {
   if (author.website_url) socialLinks['website'] = author.website_url;
   const sameAsUrls = Object.values(socialLinks).filter(Boolean) as string[];
 
-  // Person schema — server-rendered for E-E-A-T. JSON.stringify escapes all special chars.
+  // Person schema — server-rendered for E-E-A-T; escaped below before injection.
   const personSchemaStr = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -122,7 +122,10 @@ export default async function AuthorPage({ params }: PageProps) {
     ...(author.expertise?.length && { knowsAbout: author.expertise }),
     ...(sameAsUrls.length && { sameAs: sameAsUrls }),
     worksFor: { '@type': 'Organization', name: site.name, url: baseUrl || undefined },
-  });
+  })
+    // Escape script-breaking sequences before dangerouslySetInnerHTML (stored-XSS hardening)
+    .replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
 
   const SOCIAL_LABELS: Record<string, string> = {
     twitter: 'Twitter / X',
@@ -136,7 +139,6 @@ export default async function AuthorPage({ params }: PageProps) {
   return (
     <>
       <JsonLd type="breadcrumb" data={{ items: breadcrumbItems }} />
-      {/* Person schema server-rendered — JSON.stringify output is always XSS-safe */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personSchemaStr }} />
 
       <div className="container mx-auto px-4 py-12 max-w-4xl">
