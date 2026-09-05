@@ -13,6 +13,66 @@ interface CalculatorProps {
   siteId: string;
 }
 
+// EVAL_SIMPLE_STEPS — safe evaluator for calculation_formula = {type:'simple', steps:[{name, formula}]}
+// Grammar: numbers, identifiers (inputs + earlier steps), + - * / ( ), unary minus, max/min/round/ceil/floor/abs.
+// No eval/Function. Unknown identifiers resolve to 0; division by zero yields 0.
+function evaluateSimpleSteps(
+  steps: Array<{ name: string; formula: string }>,
+  inputs: Record<string, number>
+): Record<string, number> {
+  const scope: Record<string, number> = { ...inputs };
+  const results: Record<string, number> = {};
+  const FUNCS: Record<string, (...a: number[]) => number> = {
+    max: (...a) => Math.max(...a), min: (...a) => Math.min(...a), round: (a) => Math.round(a),
+    ceil: (a) => Math.ceil(a), floor: (a) => Math.floor(a), abs: (a) => Math.abs(a),
+  };
+  const evalExpr = (src: string): number => {
+    const tokens = src.match(/\d+(?:\.\d+)?|[A-Za-z_][A-Za-z0-9_]*|[-+*/(),]/g) || [];
+    let i = 0;
+    const peek = () => tokens[i];
+    const next = () => tokens[i++];
+    const primary = (): number => {
+      const t = next();
+      if (t === undefined) return 0;
+      if (t === '(') { const v = expr(); if (peek() === ')') next(); return v; }
+      if (t === '-') return -primary();
+      if (t === '+') return primary();
+      if (/^\d/.test(t)) return parseFloat(t);
+      if (/^[A-Za-z_]/.test(t)) {
+        if (peek() === '(' && FUNCS[t]) {
+          next(); const args: number[] = [];
+          if (peek() !== ')') { args.push(expr()); while (peek() === ',') { next(); args.push(expr()); } }
+          if (peek() === ')') next();
+          return FUNCS[t](...args);
+        }
+        const v = scope[t]; return typeof v === 'number' && isFinite(v) ? v : 0;
+      }
+      return 0;
+    };
+    const term = (): number => {
+      let v = primary();
+      while (peek() === '*' || peek() === '/') {
+        const op = next(); const r = primary();
+        v = op === '*' ? v * r : (r === 0 ? 0 : v / r);
+      }
+      return v;
+    };
+    const expr = (): number => {
+      let v = term();
+      while (peek() === '+' || peek() === '-') { const op = next(); const r = term(); v = op === '+' ? v + r : v - r; }
+      return v;
+    };
+    const out = expr();
+    return isFinite(out) ? out : 0;
+  };
+  for (const step of steps) {
+    if (!step || !step.name || typeof step.formula !== 'string') continue;
+    const v = evalExpr(step.formula);
+    scope[step.name] = v; results[step.name] = v;
+  }
+  return results;
+}
+
 /**
  * Safe math operations for calculator formulas
  * Instead of eval/Function, we use predefined operations
@@ -485,7 +545,10 @@ export function Calculator({ template, siteId }: CalculatorProps) {
 
     try {
       // Use safe calculation based on calculator_type
-      const calculatedResults = safeCalculate(template.calculator_type, inputs);
+      const simpleFormula = (template as any).calculation_formula as { type?: string; steps?: Array<{ name: string; formula: string }> } | null;
+      const calculatedResults = simpleFormula && simpleFormula.type === 'simple' && Array.isArray(simpleFormula.steps)
+        ? { ...inputs, ...evaluateSimpleSteps(simpleFormula.steps, inputs) }
+        : safeCalculate(template.calculator_type, inputs);
       setResults(calculatedResults);
 
       // Track usage
@@ -561,11 +624,13 @@ export function Calculator({ template, siteId }: CalculatorProps) {
     Object.entries(results).forEach(([key, value]) => {
       const formatted = formatNumber(value);
       formattedText = formattedText.replace(new RegExp(`{{${key}}}`, 'g'), formatted);
+      formattedText = formattedText.replace(new RegExp(`\\$\\{${key}\\}`, 'g'), formatted);
     });
 
     // Also replace inputs in template
     Object.entries(inputs).forEach(([key, value]) => {
       formattedText = formattedText.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
+      formattedText = formattedText.replace(new RegExp(`\\$\\{${key}\\}`, 'g'), String(value));
     });
 
     return (
