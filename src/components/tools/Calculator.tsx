@@ -704,7 +704,22 @@ export function Calculator({ template, siteId }: CalculatorProps) {
                 {field.label}
                 {field.unit && <span className="text-muted-foreground ml-1">({field.unit})</span>}
               </Label>
-              {field.type === 'range' ? (
+              {/* SELECT_FIELD: without this branch a select rendered as a bare number input and its
+                  options were dropped entirely, leaving an unlabelled empty box. */}
+              {field.type === 'select' && Array.isArray((field as any).options) ? (
+                <select
+                  id={field.name}
+                  value={String(inputs[field.name] ?? field.default_value ?? '')}
+                  onChange={(e) => handleInputChange(field.name, e.target.value)}
+                  className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
+                >
+                  {((field as any).options as Array<any>).map((opt, i) => {
+                    const value = typeof opt === 'object' && opt !== null ? String(opt.value) : String(opt);
+                    const label = typeof opt === 'object' && opt !== null ? String(opt.label ?? opt.value) : String(opt);
+                    return <option key={i} value={value}>{label}</option>;
+                  })}
+                </select>
+              ) : field.type === 'range' ? (
                 <div className="space-y-1">
                   <input
                     id={field.name}
