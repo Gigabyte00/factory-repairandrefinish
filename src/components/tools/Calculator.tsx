@@ -13,7 +13,7 @@ interface CalculatorProps {
   siteId: string;
 }
 
-// EVAL_SIMPLE_STEPS — safe evaluator for calculation_formula = {type:'simple', steps:[{name, formula}]}
+// EVAL_SIMPLE_STEPS v3 — safe evaluator for calculation_formula = {type:'simple', steps:[{name, formula}]}
 // Grammar: numbers, identifiers (inputs + earlier steps), + - * / ( ), unary minus, max/min/round/ceil/floor/abs.
 // No eval/Function. Unknown identifiers resolve to 0; division by zero yields 0.
 function evaluateSimpleSteps(
@@ -25,7 +25,10 @@ function evaluateSimpleSteps(
   const FUNCS: Record<string, (...a: number[]) => number> = {
     max: (...a) => Math.max(...a), min: (...a) => Math.min(...a), round: (a) => Math.round(a),
     ceil: (a) => Math.ceil(a), floor: (a) => Math.floor(a), abs: (a) => Math.abs(a),
+    pow: (a, b) => Math.pow(a, b), sqrt: (a) => Math.sqrt(Math.max(0, a)), exp: (a) => Math.exp(a),
+    ln: (a) => (a > 0 ? Math.log(a) : 0),
   };
+  let unsupported = false;   // set when a formula uses a function this build cannot evaluate
   const evalExpr = (src: string): number => {
     const tokens = src.match(/\d+(?:\.\d+)?|[A-Za-z_][A-Za-z0-9_]*|[-+*/(),]/g) || [];
     let i = 0;
@@ -39,13 +42,17 @@ function evaluateSimpleSteps(
       if (t === '+') return primary();
       if (/^\d/.test(t)) return parseFloat(t);
       if (/^[A-Za-z_]/.test(t)) {
-        if (peek() === '(' && FUNCS[t]) {
+        if (peek() === '(') {
+          // ALWAYS consume the argument list, even for an unknown name. The first version bailed
+          // out without consuming, so `1 + pow(2,3) + 5` evaluated to 1 — a confident wrong number
+          // rather than a visible failure. On the betting page that rendered "Risk of Ruin 0%".
           next(); const args: number[] = [];
           if (peek() !== ')') { args.push(expr()); while (peek() === ',') { next(); args.push(expr()); } }
           if (peek() === ')') next();
+          if (!FUNCS[t]) { unsupported = true; return NaN; }
           return FUNCS[t](...args);
         }
-        const v = scope[t]; return typeof v === 'number' && isFinite(v) ? v : 0;
+        const v = scope[t]; const n = typeof v === 'number' ? v : parseFloat(String(v ?? '')); return isFinite(n) ? n : 0;
       }
       return 0;
     };
@@ -63,6 +70,9 @@ function evaluateSimpleSteps(
       return v;
     };
     const out = expr();
+    // NaN propagates out of an unsupported call so a caller can suppress the line rather than
+    // rendering a fabricated 0. Division by zero still yields 0 (documented, money-safe here).
+    if (unsupported) return NaN;
     return isFinite(out) ? out : 0;
   };
   for (const step of steps) {
@@ -623,13 +633,17 @@ export function Calculator({ template, siteId }: CalculatorProps) {
 
     Object.entries(results).forEach(([key, value]) => {
       const formatted = formatNumber(value);
-      formattedText = formattedText.replace(new RegExp(`{{${key}}}`, 'g'), formatted);
+      const rk = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      formattedText = formattedText.replace(new RegExp(`{{${rk}}}`, 'g'), formatted);
+      formattedText = formattedText.replace(new RegExp(`\$\{${rk}\}`, 'g'), formatted);
       formattedText = formattedText.replace(new RegExp(`\\$\\{${key}\\}`, 'g'), formatted);
     });
 
     // Also replace inputs in template
     Object.entries(inputs).forEach(([key, value]) => {
-      formattedText = formattedText.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
+      const rk = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      formattedText = formattedText.replace(new RegExp(`{{${rk}}}`, 'g'), String(value));
+      formattedText = formattedText.replace(new RegExp(`\$\{${rk}\}`, 'g'), String(value));
       formattedText = formattedText.replace(new RegExp(`\\$\\{${key}\\}`, 'g'), String(value));
     });
 
