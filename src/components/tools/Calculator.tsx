@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -81,6 +81,12 @@ function evaluateSimpleSteps(
     scope[step.name] = v; results[step.name] = v;
   }
   return results;
+}
+
+// RENDER_INLINE — minimal inline markdown for result templates (**bold**, leading "- " bullets)
+function renderInline(line: string): ReactNode[] {
+  const text = line.replace(/^\s*-\s+/, '\u2022 ');
+  return text.split(/\*\*(.+?)\*\*/g).map((part, i) => (i % 2 === 1 ? <strong key={i}>{part}</strong> : part));
 }
 
 /**
@@ -619,10 +625,11 @@ export function Calculator({ template, siteId }: CalculatorProps) {
   };
 
   const formatNumber = (num: number): string => {
-    if (Math.abs(num) >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
-    if (Math.abs(num) >= 1000) return `${(num / 1000).toFixed(1)}K`;
-    if (Number.isInteger(num)) return String(num);
-    return num.toFixed(2);
+    // FORMAT_MONEY: these are money and counts, not dashboard stats — "$75.5K" where the
+    // template said "$${total_cost}" drops precision the reader is entitled to.
+    if (!isFinite(num)) return '—';
+    if (Number.isInteger(num)) return num.toLocaleString('en-US');
+    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   const renderResults = () => {
@@ -654,7 +661,7 @@ export function Calculator({ template, siteId }: CalculatorProps) {
         </h3>
         <div className="prose prose-sm dark:prose-invert max-w-none">
           {formattedText.split('\n').map((line, index) => (
-            <p key={index} className="mb-2">{line}</p>
+            <p key={index} className="mb-2">{renderInline(line)}</p>
           ))}
         </div>
 

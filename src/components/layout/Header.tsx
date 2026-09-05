@@ -50,7 +50,7 @@ export async function Header() {
       ? { label: 'Categories', href: '/blog', dropdown: topCategories }
       : { label: 'Categories', href: '/blog' },
     { label: 'Tools', href: '/tools' },
-    { label: 'Under $1,000', href: '/electric-bikes-under-1000' },
+    { label: 'Best Picks', href: '/best' },
     { label: 'Best Deals', href: '/offers' },
   ];
 
