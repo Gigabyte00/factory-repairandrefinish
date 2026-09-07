@@ -166,7 +166,7 @@ export function FeaturedOffers({
                   <div className="flex flex-col sm:flex-row gap-2">
                     {hero.affiliate_url && (
                       <Button asChild size="lg" className="flex-1 font-semibold">
-                        <Link href={`/go/${hero.slug}`} target="_blank" rel="noopener nofollow sponsored">
+                        <Link prefetch={false} href={`/go/${hero.slug}`} target="_blank" rel="noopener nofollow sponsored">
                           Check price Buy options
                           <ArrowRight size={16} className="ml-1.5" />
                         </Link>
@@ -228,7 +228,7 @@ export function FeaturedOffers({
                       </span>
                     )}
                     {offer.affiliate_url && (
-                      <Link
+                      <Link prefetch={false}
                         href={`/go/${offer.slug}`}
                         target="_blank"
                         rel="noopener nofollow sponsored"
