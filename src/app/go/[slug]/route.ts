@@ -23,6 +23,23 @@ const GO_MAP = goMapJson as unknown as GoMap;
 
 class DbUnavailable extends Error {}
 
+// click→conversion attribution — stamp the click token (offer_clicks.id) as the network sub-id.
+// Mirror of factory-tools/factory-attribution/inject_click_id.mjs — keep in sync.
+function injectClickId(u: string, id: string): string {
+  try {
+    const url = new URL(u); const h = url.hostname.toLowerCase();
+    const p =
+      (/(^|\.)(anrdoezrs|tkqlhce|dpbolvw|jdoqocy|kqzyfj|emjcd|ftjcfx|awltovhc|lduhtrp|qksrv)\.(net|com)$/.test(h) || h.endsWith('.cj.com')) ? 'sid'
+      : h.endsWith('awin1.com') ? 'clickref'
+      : /(^|\.)(pxf\.io|sjv\.io|ojrq\.net|impact\.com)$/.test(h) ? 'subId1'
+      : (h.includes('amazon.') || h.includes('amzn.')) ? 'ascsubtag'
+      : /(^|\.)(flexlinkspro\.com|flexoffers\.com)$/.test(h) ? 'fobs'
+      : 'subid';
+    url.searchParams.set(p, id);
+    return url.toString();
+  } catch { return u; }
+}
+
 /** Await a query within the remaining budget; DB error or timeout → DbUnavailable (never a hang). */
 async function withBudget(
   q: PromiseLike<{ data: unknown; error: { message: string } | null }>,
@@ -153,6 +170,7 @@ export async function GET(
   }
 
   const { slug } = await params;
+  const __clickId = globalThis.crypto.randomUUID(); // click token = offer_clicks.id, stamped as the network sub-id
   const site = getSiteConfig();
 
   try {
@@ -266,6 +284,7 @@ export async function GET(
     supabase
         .from('offer_clicks')
         .insert({
+          id: __clickId,
           offer_id: offer.id,
           site_id: offer.site_id,
           referrer: referrer.slice(0, 500),
@@ -323,7 +342,7 @@ export async function GET(
     // HTTP 302 redirect — proper server-side redirect that Amazon Associates can track.
     // Browsers follow 302s with the Location header, preserving referrer context
     // and allowing Amazon to set its affiliate attribution cookie.
-    const response = NextResponse.redirect(affiliateUrl, 302);
+    const response = NextResponse.redirect(injectClickId(affiliateUrl, __clickId), 302);
     response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
     response.headers.set('X-Robots-Tag', 'noindex, nofollow');
     response.headers.set('Referrer-Policy', 'no-referrer-when-downgrade');
