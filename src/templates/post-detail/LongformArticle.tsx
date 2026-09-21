@@ -25,6 +25,8 @@ import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ChevronRight, BookOpen } from 'lucide-react';
+// react-markdown passes its AST `node` in props; never spread it onto a DOM element (Block 13, 2026-09-21).
+const omitNode = <T extends object>(p: T) => { const { node: _n, ...r } = p as T & { node?: unknown }; return r; };
 
 function splitMarkdown(content: string, index: number): [string, string] {
   const chunks = content.split(/\n\n+/);
@@ -38,12 +40,12 @@ function affiliateLinkComponents(slug: string) {
       if (href?.startsWith('/go/')) {
         const sep = href.includes('?') ? '&' : '?';
         return (
-          <a href={`${href}${sep}utm_source=blog&utm_medium=affiliate&utm_campaign=${slug}`} target="_blank" rel="noopener noreferrer sponsored" {...props}>
+          <a href={`${href}${sep}utm_source=blog&utm_medium=affiliate&utm_campaign=${slug}`} target="_blank" rel="noopener noreferrer sponsored" {...omitNode(props)}>
             {children}
           </a>
         );
       }
-      return <a href={href} {...props}>{children}</a>;
+      return <a href={href} {...omitNode(props)}>{children}</a>;
     },
   };
 }

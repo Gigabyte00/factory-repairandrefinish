@@ -41,6 +41,8 @@ import JsonLdTyped from '@/components/JsonLd';
 import { ReadingProgress } from '@/components/content/ReadingProgress';
 import { RelatedInline } from '@/components/content/RelatedInline';
 import { ScrollDepthTracker } from '@/components/analytics/ScrollDepthTracker';
+// react-markdown passes its AST `node` in props; never spread it onto a DOM element (Block 13, 2026-09-21).
+const omitNode = <T extends object>(p: T) => { const { node: _n, ...r } = p as T & { node?: unknown }; return r; };
 
 /** Split markdown content at the Nth paragraph break. Returns [before, after]. */
 function splitMarkdown(content: string, paragraphIndex: number): [string, string] {
@@ -64,13 +66,13 @@ function affiliateLinkComponents(slug: string) {
             href={`${href}${sep}utm_source=blog&utm_medium=affiliate&utm_campaign=${slug}`}
             target="_blank"
             rel="noopener noreferrer sponsored"
-            {...props}
+            {...omitNode(props)}
           >
             {children}
           </a>
         );
       }
-      return <a href={href} {...props}>{children}</a>;
+      return <a href={href} {...omitNode(props)}>{children}</a>;
     },
   };
 }

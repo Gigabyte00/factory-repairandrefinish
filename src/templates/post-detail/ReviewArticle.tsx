@@ -35,6 +35,8 @@ import {
   Award,
   ExternalLink,
 } from 'lucide-react';
+// react-markdown passes its AST `node` in props; never spread it onto a DOM element (Block 13, 2026-09-21).
+const omitNode = <T extends object>(p: T) => { const { node: _n, ...r } = p as T & { node?: unknown }; return r; };
 
 export default function ReviewArticle({
   post,
@@ -395,9 +397,9 @@ export default function ReviewArticle({
                     a: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { children?: React.ReactNode }) => {
                       if (href?.startsWith('/go/')) {
                         const sep = href.includes('?') ? '&' : '?';
-                        return <a href={`${href}${sep}utm_source=blog&utm_medium=affiliate&utm_campaign=${post.slug}`} target="_blank" rel="noopener noreferrer sponsored" {...props}>{children}</a>;
+                        return <a href={`${href}${sep}utm_source=blog&utm_medium=affiliate&utm_campaign=${post.slug}`} target="_blank" rel="noopener noreferrer sponsored" {...omitNode(props)}>{children}</a>;
                       }
-                      return <a href={href} {...props}>{children}</a>;
+                      return <a href={href} {...omitNode(props)}>{children}</a>;
                     },
                   };
                   return (
