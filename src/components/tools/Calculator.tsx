@@ -13,15 +13,22 @@ interface CalculatorProps {
   siteId: string;
 }
 
-// EVAL_SIMPLE_STEPS v3 — safe evaluator for calculation_formula = {type:'simple', steps:[{name, formula}]}
+// EVAL_SIMPLE_STEPS v4 — safe evaluator for calculation_formula = {type:'simple', steps:[{name, formula}]}
 // Grammar: numbers, identifiers (inputs + earlier steps), + - * / ( ), unary minus, max/min/round/ceil/floor/abs.
 // No eval/Function. Unknown identifiers resolve to 0; division by zero yields 0.
+// A step is either an arithmetic expression or a lookup:
+//   { name, formula }                      -> evaluated with the grammar below
+//   { name, map: { on, cases, default } }  -> `on` is an input name (or a list of them, joined with
+//                                             "|") whose STRING value selects a case. Lets a select
+//                                             field drive text output — an ingredient-compatibility
+//                                             verdict, a tempering temperature — without bespoke
+//                                             TypeScript per calculator.
 function evaluateSimpleSteps(
-  steps: Array<{ name: string; formula: string }>,
-  inputs: Record<string, number>
-): Record<string, number> {
-  const scope: Record<string, number> = { ...inputs };
-  const results: Record<string, number> = {};
+  steps: Array<{ name: string; formula?: string; map?: { on: string | string[]; cases: Record<string, number | string>; default?: number | string } }>,
+  inputs: Record<string, number | string>
+): Record<string, number | string> {
+  const scope: Record<string, number | string> = { ...inputs };
+  const results: Record<string, number | string> = {};
   const FUNCS: Record<string, (...a: number[]) => number> = {
     max: (...a) => Math.max(...a), min: (...a) => Math.min(...a), round: (a) => Math.round(a),
     ceil: (a) => Math.ceil(a), floor: (a) => Math.floor(a), abs: (a) => Math.abs(a),
@@ -52,6 +59,7 @@ function evaluateSimpleSteps(
           if (!FUNCS[t]) { unsupported = true; return NaN; }
           return FUNCS[t](...args);
         }
+        // A non-numeric string in scope (a lookup verdict) coerces to 0 in arithmetic.
         const v = scope[t]; const n = typeof v === 'number' ? v : parseFloat(String(v ?? '')); return isFinite(n) ? n : 0;
       }
       return 0;
@@ -76,7 +84,17 @@ function evaluateSimpleSteps(
     return isFinite(out) ? out : 0;
   };
   for (const step of steps) {
-    if (!step || !step.name || typeof step.formula !== 'string') continue;
+    if (!step || !step.name) continue;
+    if (step.map && step.map.cases) {
+      const on = Array.isArray(step.map.on) ? step.map.on : [step.map.on];
+      const key = on.map((k) => String(scope[k] ?? '')).join('|');
+      const hit = Object.prototype.hasOwnProperty.call(step.map.cases, key)
+        ? step.map.cases[key]
+        : (step.map.default ?? '');
+      scope[step.name] = hit; results[step.name] = hit;
+      continue;
+    }
+    if (typeof step.formula !== 'string') continue;
     const v = evalExpr(step.formula);
     scope[step.name] = v; results[step.name] = v;
   }
@@ -527,9 +545,43 @@ function safeCalculate(
   return results;
 }
 
+// DEFAULT_RENDER v1 (2026-09-20, Block 12 §2): the result block — and the CTA inside it — used to exist
+// only after a click, so no crawler, assistant or non-interacting reader ever saw a worked answer.
+// Next.js SSRs a client component's INITIAL state, so seeding inputs and results from
+// input_fields[].default_value puts the worked example and the CTA into the crawlable HTML.
+// Pure and deterministic (no DB write, no tracking, no Date/random): the server and client first
+// renders must match byte-for-byte or React discards the SSR'd tree. A non-finite value (NaN from an
+// unsupported formula function) or an empty result means NO block — never a confident wrong number.
+function defaultInputsOf(template: CalculatorTemplate): Record<string, number | string> {
+  const out: Record<string, number | string> = {};
+  for (const f of ((template.input_fields ?? []) as CalculatorInputField[])) {
+    if (f && f.name != null && f.default_value !== undefined && f.default_value !== null) {
+      out[f.name] = f.default_value as number | string;
+    }
+  }
+  return out;
+}
+function computeResults(template: CalculatorTemplate, inputs: Record<string, number | string>): Record<string, any> {
+  const simpleFormula = (template as any).calculation_formula as { type?: string; steps?: Array<any> } | null;
+  return simpleFormula && simpleFormula.type === 'simple' && Array.isArray(simpleFormula.steps)
+    ? { ...inputs, ...evaluateSimpleSteps(simpleFormula.steps, inputs) }
+    : safeCalculate(template.calculator_type, inputs as Record<string, number>);
+}
+function defaultResultsOf(template: CalculatorTemplate): Record<string, number | string> | null {
+  const inputs = defaultInputsOf(template);
+  if (Object.keys(inputs).length === 0) return null;
+  let r: Record<string, any>;
+  try { r = computeResults(template, inputs); } catch { return null; }
+  const vals = Object.values(r);
+  if (vals.length === 0) return null;
+  if (vals.some((v) => typeof v === 'number' && !Number.isFinite(v))) return null;
+  return r as Record<string, number | string>;
+}
+
 export function Calculator({ template, siteId }: CalculatorProps) {
-  const [inputs, setInputs] = useState<Record<string, number>>({});
-  const [results, setResults] = useState<Record<string, number> | null>(null);
+  // STRING_RESULTS: a select's value may be a word, not a number.
+  const [inputs, setInputs] = useState<Record<string, number | string>>(() => defaultInputsOf(template));
+  const [results, setResults] = useState<Record<string, number | string> | null>(() => defaultResultsOf(template));
   const [loading, setLoading] = useState(false);
   const [showEmailCapture, setShowEmailCapture] = useState(false);
   const [email, setEmail] = useState('');
@@ -542,7 +594,7 @@ export function Calculator({ template, siteId }: CalculatorProps) {
 
   // Initialize inputs with default values
   useEffect(() => {
-    const defaults: Record<string, number> = {};
+    const defaults: Record<string, number | string> = {};
     template.input_fields.forEach((field: CalculatorInputField) => {
       defaults[field.name] = field.default_value;
     });
@@ -552,7 +604,8 @@ export function Calculator({ template, siteId }: CalculatorProps) {
   const handleInputChange = (fieldName: string, value: string) => {
     setInputs((prev) => ({
       ...prev,
-      [fieldName]: parseFloat(value) || 0,
+      // Numeric strings still become numbers; a word stays a word so a lookup can key on it.
+      [fieldName]: value === '' ? 0 : (isFinite(Number(value)) ? Number(value) : value),
     }));
   };
 
@@ -561,10 +614,7 @@ export function Calculator({ template, siteId }: CalculatorProps) {
 
     try {
       // Use safe calculation based on calculator_type
-      const simpleFormula = (template as any).calculation_formula as { type?: string; steps?: Array<{ name: string; formula: string }> } | null;
-      const calculatedResults = simpleFormula && simpleFormula.type === 'simple' && Array.isArray(simpleFormula.steps)
-        ? { ...inputs, ...evaluateSimpleSteps(simpleFormula.steps, inputs) }
-        : safeCalculate(template.calculator_type, inputs);
+      const calculatedResults: Record<string, any> = computeResults(template, inputs);
       setResults(calculatedResults);
 
       // Track usage
@@ -599,7 +649,7 @@ export function Calculator({ template, siteId }: CalculatorProps) {
       // + drip enrollment). The previous direct upsert sent nothing despite
       // the "report sent" claim.
       const resultsSummary = Object.entries(results)
-        .map(([key, value]) => `${key}: ${formatNumber(value)}`)
+        .map(([key, value]) => `${key}: ${typeof value === 'string' ? value : formatNumber(value)}`)
         .join(', ');
 
       const response = await fetch('/api/newsletter', {
@@ -639,19 +689,19 @@ export function Calculator({ template, siteId }: CalculatorProps) {
     let formattedText = template.result_template || '';
 
     Object.entries(results).forEach(([key, value]) => {
-      const formatted = formatNumber(value);
+      const formatted = typeof value === 'string' ? value : formatNumber(value);
       const rk = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      formattedText = formattedText.replace(new RegExp(`{{${rk}}}`, 'g'), formatted);
-      formattedText = formattedText.replace(new RegExp(`\$\{${rk}\}`, 'g'), formatted);
-      formattedText = formattedText.replace(new RegExp(`\\$\\{${key}\\}`, 'g'), formatted);
+      formattedText = formattedText.replace(new RegExp(`{{${rk}}}`, 'g'), () => formatted); // REPLACE_FN
+      formattedText = formattedText.replace(new RegExp(`\$\{${rk}\}`, 'g'), () => formatted);
+      formattedText = formattedText.replace(new RegExp(`\\$\\{${key}\\}`, 'g'), () => formatted);
     });
 
     // Also replace inputs in template
     Object.entries(inputs).forEach(([key, value]) => {
       const rk = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      formattedText = formattedText.replace(new RegExp(`{{${rk}}}`, 'g'), String(value));
-      formattedText = formattedText.replace(new RegExp(`\$\{${rk}\}`, 'g'), String(value));
-      formattedText = formattedText.replace(new RegExp(`\\$\\{${key}\\}`, 'g'), String(value));
+      formattedText = formattedText.replace(new RegExp(`{{${rk}}}`, 'g'), () => String(value));
+      formattedText = formattedText.replace(new RegExp(`\$\{${rk}\}`, 'g'), () => String(value));
+      formattedText = formattedText.replace(new RegExp(`\\$\\{${key}\\}`, 'g'), () => String(value));
     });
 
     return (
@@ -668,7 +718,7 @@ export function Calculator({ template, siteId }: CalculatorProps) {
         <div className="mt-6 flex flex-wrap gap-3">
           {template.cta_url && (
             <Button asChild>
-              <a href={template.cta_url}>
+              <a href={template.cta_url} rel={/^(\/go\/|https?:)/.test(template.cta_url) ? 'nofollow sponsored' : undefined}>
                 {template.cta_text || 'View Recommendations'}
               </a>
             </Button>
