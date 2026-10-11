@@ -42,7 +42,7 @@ export default async function ComparisonBuilderPage() {
     // offers.price_usd is numeric in the DB; format to a display string here
     // so downstream components (SideBySide) get the expected string type.
     price: o.price_usd != null ? `$${o.price_usd}` : null,
-    affiliateUrl: o.affiliate_url as string | null,
+    affiliateUrl: o.affiliate_url && o.slug ? `/go/${o.slug}` : null, // AMZ-2 leak fix (2026-10-11): /go path only — SideBySide links /go/<slug> itself
     award: o.award as string | null,
     pros: (o.pros as string[] | null) ?? [],
     cons: (o.cons as string[] | null) ?? [],
