@@ -405,7 +405,7 @@ export default function ComparisonArticle({
                 <Prose className="mb-8"><ReactMarkdown remarkPlugins={[remarkGfm]} components={linkComponents}>{before}</ReactMarkdown></Prose>
                 {after && (
                   <>
-                    <RelatedInline posts={relatedPosts as any} heading="Keep Pedaling" />
+                    <RelatedInline posts={relatedPosts as any} heading="Keep Reading" />
                     <Prose className="mb-8"><ReactMarkdown remarkPlugins={[remarkGfm]} components={linkComponents}>{after}</ReactMarkdown></Prose>
                   </>
                 )}

@@ -24,6 +24,7 @@ import { ExitIntentPopup } from '@/components/ExitIntentPopup';
 import { BackToTop } from '@/components/ui/back-to-top';
 import { NewsletterSignup } from '@/components/home/NewsletterSignup';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { AssociatesStatement } from '@/components/AssociatesStatement';
 
 // Next.js requires each font loader to be a separate const at module scope
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
@@ -194,6 +195,7 @@ export default function RootLayout({
           <ScrollReveal />
         </ThemeProvider>
         <SpeedInsights />
+        <AssociatesStatement />
       </body>
     </html>
   );
