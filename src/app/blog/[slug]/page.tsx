@@ -3,31 +3,92 @@ import { createServerClient } from '@/lib/supabase';
 import type { Post, Category } from '@/types';
 import { notFound } from 'next/navigation';
 import { getTemplate, getDefaultVariant } from '@/lib/templates/registry';
+import { TopBuyBox } from '@/components/offers/TopBuyBox';
+import { StickyMobileBuyBar } from '@/components/offers/StickyMobileBuyBar';
+
+// AMZ-2 topbuybox (2026-10-11): merchant-aware price-CTA label. Ported from the AMZ-2 store-label.ts pattern
+// (storeName/priceCtaLabel) used elsewhere in the fleet; this repo has no src/lib/store-label.ts of its
+// own, so the derivation is inlined. Never invents a merchant name; active-offers-only, so there is no
+// "inactive" wording branch here.
+function amz2StoreName(offer: { affiliate_url?: string | null; affiliate_program?: string | null }): string | null {
+  let host: string | null = null;
+  try {
+    host = offer.affiliate_url ? new URL(offer.affiliate_url).hostname.toLowerCase() : null;
+  } catch {
+    host = null;
+  }
+  const program = offer.affiliate_program?.trim() || null;
+  if ((host && /amazon\./.test(host)) || (program && /amazon/i.test(program))) return 'Amazon';
+  if ((host && /ebay\./.test(host)) || (program && /ebay/i.test(program))) return 'eBay';
+  if (program) {
+    const stripped = program.replace(/\s*\([^()]*\)\s*$/, '').trim().split(' | ')[0].trim();
+    return stripped || null;
+  }
+  return null;
+}
+
+function amz2PriceCtaLabel(offer: { affiliate_url?: string | null; affiliate_program?: string | null }): string {
+  const store = amz2StoreName(offer);
+  if (store === 'Amazon') return 'Check price on Amazon';
+  if (store) return `Check price at ${store}`;
+  return 'Check price';
+}
+
+// AMZ-2 topbuybox (2026-10-11): CTA-integrity law -- a product may surface in the box only if the post body
+// actually discusses it. Checks for a /go/<slug> link terminated by )?"/# , whitespace, or end, so
+// /go/abc never matches /go/abcd. Tried against both slug and pretty_slug (either may be the one
+// linked in the body).
+function amz2MentionedInBody(content: string, slugs: Array<string | null | undefined>): boolean {
+  for (const raw of slugs) {
+    if (!raw) continue;
+    const escaped = raw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (new RegExp(`/go/${escaped}(?:[)?"/#\s]|$)`).test(content)) return true;
+  }
+  return false;
+}
 import JsonLd from '@/components/JsonLd';
 import RelatedOffersRail from '@/components/offers/RelatedOffersRail';
 import { canonicalUrl } from '@/lib/seo';
 import { normalizeArticleHeadings, rewriteAmazonLinksToGo } from '@/lib/article-content';
 
-/** Extract FAQ Q&A pairs from markdown content (detects ## FAQ / ## Frequently Asked Questions sections). */
+/** Extract FAQ Q&A pairs from markdown content (detects ## FAQ / ## Frequently Asked Questions sections).
+ * AMZ-2 faq-v2 2026-10-18: the section ends at the next '## '; '### Question' blocks first, then the writers' '**Question?**' line form
+ * (answer on the next line or the same line); links/emphasis flattened so nothing markdown-shaped reaches the JSON-LD. */
 function extractFaqs(content: string): Array<{ question: string; answer: string }> {
-  // Find the start of an FAQ section
-  const faqMatch = content.match(/^##\s+(frequently\s+asked\s+questions|faq|common\s+questions|faqs)/im);
-  if (!faqMatch || faqMatch.index === undefined) return [];
-  const faqSection = content.slice(faqMatch.index);
-
-  // Parse H3 questions + the text between them as answers
-  const blocks = faqSection.split(/^###\s+/m).slice(1); // split on H3, drop pre-FAQ content
-  const faqs: Array<{ question: string; answer: string }> = [];
-  for (const block of blocks) {
+  const head = content.match(/^##\s+(frequently\s+asked\s+questions|faq|common\s+questions|faqs)/im);
+  if (!head || head.index === undefined) return [];
+  const afterHead = content.slice(head.index).split('\n').slice(1).join('\n');
+  const stop = afterHead.search(/^##\s+/m);
+  const section = stop === -1 ? afterHead : afterHead.slice(0, stop);
+  const plain = (s: string) => s.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/\*\*/g, '').replace(/(^|[^*\w])\*([^*\n]+)\*/g, '$1$2')
+    .replace(/`([^`]+)`/g, '$1').replace(/^#+\s+/gm, '').replace(/\s+/g, ' ').trim().slice(0, 600);
+  const h3: Array<{ question: string; answer: string }> = [];
+  for (const block of section.split(/^###\s+/m).slice(1)) {
     const lines = block.split('\n');
     const question = lines[0].trim().replace(/\?$/, '').trim() + '?';
-    const answer = lines.slice(1).join('\n').trim()
-      .replace(/\*\*/g, '')   // strip bold markers
-      .replace(/\n{2,}/g, ' ') // collapse paragraph breaks
-      .slice(0, 600);
-    if (question && answer) faqs.push({ question, answer });
+    const answer = plain(lines.slice(1).join('\n'));
+    if (question.length > 1 && answer) h3.push({ question, answer });
   }
-  return faqs;
+  if (h3.length >= 3) return h3;
+  const bold: Array<{ question: string; answer: string }> = [];
+  let q: string | null = null;
+  let a: string[] = [];
+  const flush = (last: boolean) => {
+    if (!q) return;
+    const lines = [...a];
+    while (lines[0] === '') lines.shift();
+    if (last) { const gap = lines.indexOf(''); if (gap > 0) lines.length = gap; } // closing prose stays out of the last answer
+    const answer = plain(lines.join(' '));
+    if (answer) bold.push({ question: plain(q), answer });
+  };
+  for (const raw of section.split('\n')) {
+    const line = raw.trim();
+    const m = line.match(/^\*\*(.+?\?)\*\*:?\s*(.*)$/);
+    if (m) { flush(false); q = m[1]; a = m[2] ? [m[2]] : []; continue; }
+    if (q) a.push(line);
+  }
+  flush(true);
+  return bold.length > h3.length ? bold : h3;
 }
 
 export const revalidate = 3600; // Revalidate every hour
@@ -206,6 +267,53 @@ export default async function BlogPostPage({ params }: PageProps) {
   // Get template component
   const Template = getTemplate('post-detail', variant);
 
+  // AMZ-2 topbuybox (2026-10-11): resolve up to 3 ACTIVE offers (featured_offer_id first, then
+  // related_offer_ids), same site, with the supabase client this page already uses, KEEPING ONLY
+  // offers the post body actually links via /go/<slug or pretty_slug> (CTA-integrity law -- a rail
+  // offer the body never mentions must not show as a "where to buy" pick). Only {slug, name, label}
+  // ever reach TopBuyBox -- never the row, never affiliate_url -- and the sticky bar gets a
+  // precomputed /go path, never a raw URL. Nothing renders on protected EPN-pilot posts (in-body
+  // /go/ebay-used-* or /go/used-*-on-ebay links) or when no candidate survives the mention filter.
+  const topBuyBoxIds = Array.from(
+    new Set(
+      [
+        (post as any).featured_offer_id as string | null,
+        ...(Array.isArray((post as any).related_offer_ids) ? ((post as any).related_offer_ids as string[]) : []),
+      ].filter((id): id is string => !!id)
+    )
+  );
+  const topBuyBoxProtected =
+    !!post.content &&
+    (post.content.includes('/go/ebay-used-') || /\/go\/used-[a-z0-9-]*-on-ebay/.test(post.content));
+  let topBuyBoxOffers: { slug: string; name: string; label: string }[] = [];
+  let stickyBarOffer: { name: string; goPath: string; label: string } | null = null;
+  if (!topBuyBoxProtected && topBuyBoxIds.length > 0) {
+    const { data: topBuyBoxRows } = await supabase
+      .from('offers')
+      .select('id, slug, pretty_slug, name, affiliate_url, affiliate_program')
+      .in('id', topBuyBoxIds)
+      .eq('site_id', site.id)
+      .eq('is_active', true);
+    const topBuyBoxOrder = new Map(topBuyBoxIds.map((id, i) => [id, i]));
+    const topBuyBoxSorted = (topBuyBoxRows ?? [])
+      .sort((a, b) => (topBuyBoxOrder.get(a.id) ?? 99) - (topBuyBoxOrder.get(b.id) ?? 99))
+      .filter((o) => amz2MentionedInBody(post.content ?? '', [o.slug, o.pretty_slug]))
+      .slice(0, 3);
+    topBuyBoxOffers = topBuyBoxSorted.map((o) => ({ slug: o.slug, name: o.name, label: amz2PriceCtaLabel(o) }));
+    // AMZ-2 sticky-layer 2026-10-11: Associates Participation Requirements (o) bar Special Links in layer ads, so the floating
+    // bar never carries an Amazon/Audible offer - it takes the box's first non-Amazon offer, else it does not render.
+    const stickyCandidate = topBuyBoxSorted.find((o) => !/(^|\.)(amazon|audible)\.|amzn\.to/i.test(String(o.affiliate_url ?? '').split('/')[2] ?? ''));
+    if (stickyCandidate) {
+      const topBuyBoxFirst = stickyCandidate;
+      stickyBarOffer = {
+        name: topBuyBoxFirst.name,
+        goPath: `/go/${topBuyBoxFirst.slug}?utm_source=sticky&utm_medium=affiliate&utm_campaign=${encodeURIComponent(post.slug)}`,
+        label: amz2PriceCtaLabel(topBuyBoxFirst),
+      };
+    }
+  }
+  const topBuyBoxNode = topBuyBoxOffers.length > 0 ? <TopBuyBox offers={topBuyBoxOffers} postSlug={post.slug} /> : null;
+
   const baseUrl = site.domain ? `https://${site.domain}` : '';
   const breadcrumbItems = [
     { name: 'Home', url: baseUrl || '/' },
@@ -273,7 +381,15 @@ export default async function BlogPostPage({ params }: PageProps) {
           category={category}
           relatedPosts={relatedPosts || []}
           site={site}
+          topBuyBox={topBuyBoxNode}
         />
+        {defaultVariant !== 'review' && stickyBarOffer ? (
+          <StickyMobileBuyBar
+            productName={stickyBarOffer.name}
+            affiliateUrl={stickyBarOffer.goPath}
+            ctaLabel={stickyBarOffer.label}
+          />
+        ) : null}
       </>
     );
   }
@@ -288,7 +404,15 @@ export default async function BlogPostPage({ params }: PageProps) {
         category={category}
         relatedPosts={relatedPosts || []}
         site={site}
+        topBuyBox={topBuyBoxNode}
       />
+      {variant !== 'review' && stickyBarOffer ? (
+        <StickyMobileBuyBar
+          productName={stickyBarOffer.name}
+          affiliateUrl={stickyBarOffer.goPath}
+          ctaLabel={stickyBarOffer.label}
+        />
+      ) : null}
       <RelatedOffersRail relatedOfferIds={(post as any).related_offer_ids} siteId={site.id} />
     </>
   );
