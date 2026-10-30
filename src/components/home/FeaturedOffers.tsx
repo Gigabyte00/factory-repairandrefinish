@@ -155,12 +155,6 @@ export function FeaturedOffers({
                         {formatPrice(hero.current_price)}
                       </span>
                     )}
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 dark:text-emerald-400">
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                        <path d="M2 6.5L4.5 9L10 3.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      Best price right now
-                    </span>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-2">

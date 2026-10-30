@@ -1,5 +1,5 @@
 /**
- * FinalCTA — homepage 'Ready to Ride Electric?' bottom-of-page conversion.
+ * FinalCTA — homepage bottom-of-page conversion band.
  * Claude Design handoff LiLmFmovDZCRl2PFUzv96w (2026-04-25).
  */
 import Link from 'next/link';
@@ -20,11 +20,11 @@ export interface FinalCTAProps {
 export function FinalCTA({
   siteName,
   niche,
-  heading = 'Ready to Ride Electric?',
+  heading = 'Ready to Restore Your Furniture?',
   subtext = 'Browse our expert reviews, compare options, and find the right fit — all completely free.',
   ctaPrimaryText = 'Start Comparing',
   ctaPrimaryUrl = '/blog',
-  ctaSecondaryText = 'Compare Models',
+  ctaSecondaryText = 'Compare Products',
   ctaSecondaryUrl = '/compare/builder',
 }: FinalCTAProps) {
   return (
