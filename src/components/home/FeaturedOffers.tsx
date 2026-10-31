@@ -161,7 +161,7 @@ export function FeaturedOffers({
                     {hero.affiliate_url && (
                       <Button asChild size="lg" className="flex-1 font-semibold">
                         <Link prefetch={false} href={`/go/${hero.slug}`} target="_blank" rel="noopener nofollow sponsored">
-                          Check price Buy options
+                          Check price
                           <ArrowRight size={16} className="ml-1.5" />
                         </Link>
                       </Button>
