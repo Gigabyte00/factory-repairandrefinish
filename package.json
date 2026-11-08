@@ -4,8 +4,9 @@
   "private": true,
   "description": "Factory-generated affiliate/blog site - standalone Next.js 15 template",
   "scripts": {
+    "test:font-patch": "node --test scripts/patch-next-font.test.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/build_go_map.mjs",
+    "prebuild": "node scripts/patch-next-font.mjs && node scripts/build_go_map.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

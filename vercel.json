@@ -43,5 +43,10 @@
         }
       ]
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "codex/maintenance-font-rotation-2026-11-08": false
+    }
+  }
 }
